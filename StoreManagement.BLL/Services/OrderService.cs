@@ -14,7 +14,7 @@ namespace StoreManagement.BLL.Services
         {
             _orderRepository = new OrderRepository();
         }
-        public List<StoreManagement.DAL.Models.Order> GetAllOrders()
+        public List<StoreManagement.DAL.Entities.Order> GetAllOrders()
         {
             if (_orderRepository == null)
             {
@@ -22,7 +22,7 @@ namespace StoreManagement.BLL.Services
             }
             return _orderRepository.GetAll();
         }
-        public List<StoreManagement.DAL.Models.Order> SearchOrderByCustomer(string customerName, int customerId)
+        public List<StoreManagement.DAL.Entities.Order> SearchOrderByCustomer(string customerName, int customerId)
         {
             if (customerId < 0 && string.IsNullOrEmpty(customerName))
             {
@@ -30,7 +30,7 @@ namespace StoreManagement.BLL.Services
             }
             return _orderRepository.SearchOrderByCustomer(customerName, customerId);
         }
-        public List<StoreManagement.DAL.Models.Order> SearchOrderByEmployee(string employeeName, int employeeId)
+        public List<StoreManagement.DAL.Entities.Order> SearchOrderByEmployee(string employeeName, int employeeId)
         {
             if (employeeId < 0 && string.IsNullOrEmpty(employeeName))
             {
@@ -38,7 +38,7 @@ namespace StoreManagement.BLL.Services
             }
             return _orderRepository.SearchOrderByEmployee(employeeName, employeeId);
         }
-        public void UpdateOrder(StoreManagement.DAL.Models.Order order)
+        public void UpdateOrder(StoreManagement.DAL.Entities.Order order)
         {
             if (order == null)
             {

@@ -7,6 +7,8 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Label x:Name="lblRole" Content="Role" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="40" Height="66"/>
+        <Button x:Name="btn_Logout" Content="Logout" HorizontalAlignment="Left" Margin="564,358,0,0" VerticalAlignment="Top" Width="101" Click="btn_Logout_Click"/>
 
     </Grid>
 </Window>

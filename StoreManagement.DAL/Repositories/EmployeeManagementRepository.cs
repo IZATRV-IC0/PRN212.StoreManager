@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StoreManagement.DAL.Models;
+using StoreManagement.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +18,10 @@ namespace StoreManagement.DAL.Repositories
         public List<Employee> GetAll()
         {
             return _context.Employees.ToList();
+        }
+        public Employee GetEmployeeByUserNameAndPassword(string userName, string password)
+        {
+            return _context.Employees.FirstOrDefault(e => e.UserName == userName && e.Password == password);
         }
         public List<Employee> SearchByName(string name)
         {
@@ -46,6 +50,7 @@ namespace StoreManagement.DAL.Repositories
                 existingEmployee.BirthDate = employee.BirthDate;
                 existingEmployee.HireDate = employee.HireDate;
                 existingEmployee.Address = employee.Address;
+                existingEmployee.RoleNum = employee.RoleNum;
                 _context.SaveChanges();
             }
         }

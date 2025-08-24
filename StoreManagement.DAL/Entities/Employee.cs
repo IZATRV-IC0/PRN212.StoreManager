@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace StoreManagement.DAL.Models;
+namespace StoreManagement.DAL.Entities;
 
 public partial class Employee
 {
@@ -20,6 +20,8 @@ public partial class Employee
     public DateTime? HireDate { get; set; }
 
     public string? Address { get; set; }
+
+    public int? RoleNum { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

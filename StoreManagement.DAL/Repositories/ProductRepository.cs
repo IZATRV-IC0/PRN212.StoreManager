@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StoreManagement.DAL.Models;
+using StoreManagement.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;

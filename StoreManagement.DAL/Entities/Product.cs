@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace StoreManagement.DAL.Models;
+namespace StoreManagement.DAL.Entities;
 
 public partial class Product
 {

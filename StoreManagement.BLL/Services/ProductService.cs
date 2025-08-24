@@ -14,7 +14,7 @@ namespace StoreManagement.BLL.Services
         {
             _productRepository = new ProductRepository();
         }
-        public List<StoreManagement.DAL.Models.Product> GetAllProducts()
+        public List<StoreManagement.DAL.Entities.Product> GetAllProducts()
         {
             if (_productRepository == null)
             {
@@ -22,7 +22,7 @@ namespace StoreManagement.BLL.Services
             }
             return _productRepository.GetAll();
         }
-        public List<StoreManagement.DAL.Models.Product> SearchProductsByNameAndCategory(string name, string categoryName)
+        public List<StoreManagement.DAL.Entities.Product> SearchProductsByNameAndCategory(string name, string categoryName)
         {
             if (string.IsNullOrEmpty(name) && string.IsNullOrEmpty(categoryName))
             {
@@ -30,7 +30,7 @@ namespace StoreManagement.BLL.Services
             }
             return _productRepository.SearchProductByNameAndCategory(name, categoryName);
         }
-        public void UpdateProduct(StoreManagement.DAL.Models.Product product)
+        public void UpdateProduct(StoreManagement.DAL.Entities.Product product)
         {
             if (product == null)
             {
@@ -46,7 +46,7 @@ namespace StoreManagement.BLL.Services
             }
             _productRepository.Delete(productId);
         }
-        public void AddProduct(StoreManagement.DAL.Models.Product product)
+        public void AddProduct(StoreManagement.DAL.Entities.Product product)
         {
             if (product == null)
             {

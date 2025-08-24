@@ -1,4 +1,5 @@
-﻿using System;
+﻿using StoreManagement.DAL.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +14,7 @@ namespace StoreManagement.BLL.Services
         {
             _customerManagementService = new CustomerManagementService();
         }
-        public List<StoreManagement.DAL.Models.Employee> GetAllEmployees()
+        public List<StoreManagement.DAL.Entities.Employee> GetAllEmployees()
         {
             var employeeRepository = new StoreManagement.DAL.Repositories.EmployeeManagementRepository();
             if (employeeRepository == null)
@@ -22,7 +23,17 @@ namespace StoreManagement.BLL.Services
             }
             return employeeRepository.GetAll();
         }
-        public List<StoreManagement.DAL.Models.Employee> SearchEmployeesByName(string name)
+        public Employee Login(string userName, string password)
+        {
+            if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(password))
+            {
+                throw new ArgumentException("Username and password cannot be null or empty");
+            }
+            var employeeRepository = new StoreManagement.DAL.Repositories.EmployeeManagementRepository();
+            var employee = employeeRepository.GetEmployeeByUserNameAndPassword(userName, password);
+            return employee;
+        }
+        public List<StoreManagement.DAL.Entities.Employee> SearchEmployeesByName(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -31,7 +42,7 @@ namespace StoreManagement.BLL.Services
             var employeeRepository = new StoreManagement.DAL.Repositories.EmployeeManagementRepository();
             return employeeRepository.SearchByName(name);
         }
-        public void AddEmployee(StoreManagement.DAL.Models.Employee employee)
+        public void AddEmployee(StoreManagement.DAL.Entities.Employee employee)
         {
             if (employee == null)
             {
@@ -40,7 +51,7 @@ namespace StoreManagement.BLL.Services
             var employeeRepository = new StoreManagement.DAL.Repositories.EmployeeManagementRepository();
             employeeRepository.Add(employee);
         }
-        public void UpdateEmployee(StoreManagement.DAL.Models.Employee employee)
+        public void UpdateEmployee(StoreManagement.DAL.Entities.Employee employee)
         {
             if (employee == null)
             {

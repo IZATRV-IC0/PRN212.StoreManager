@@ -9,7 +9,7 @@ namespace StoreManagement.BLL.Services
         {
             _categoryRepository = new CategoryRepository();
         }
-        public List<StoreManagement.DAL.Models.Category> GetAllCategories()
+        public List<StoreManagement.DAL.Entities.Category> GetAllCategories()
         {
             if (_categoryRepository == null)
             {
@@ -17,7 +17,7 @@ namespace StoreManagement.BLL.Services
             }
             return _categoryRepository.GetAll();
         }
-        public void AddCategory(StoreManagement.DAL.Models.Category category)
+        public void AddCategory(StoreManagement.DAL.Entities.Category category)
         {
             if (category == null)
             {
@@ -25,7 +25,7 @@ namespace StoreManagement.BLL.Services
             }
             _categoryRepository.Add(category);
         }
-        public void UpdateCategory(StoreManagement.DAL.Models.Category category)
+        public void UpdateCategory(StoreManagement.DAL.Entities.Category category)
         {
             if(category == null)
             {

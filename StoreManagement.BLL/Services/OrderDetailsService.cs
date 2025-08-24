@@ -14,7 +14,7 @@ namespace StoreManagement.BLL.Services
         {
             _orderDetailsRepository = new OrderDetailsRepository();
         }
-        public List<StoreManagement.DAL.Models.OrderDetail> GetAllOrderDetails()
+        public List<StoreManagement.DAL.Entities.OrderDetail> GetAllOrderDetails()
         {
             if (_orderDetailsRepository == null)
             {
@@ -22,7 +22,7 @@ namespace StoreManagement.BLL.Services
             }
             return _orderDetailsRepository.GetAll();
         }
-        public List<StoreManagement.DAL.Models.OrderDetail> SearchOrderDetailsByOrderId(int orderId)
+        public List<StoreManagement.DAL.Entities.OrderDetail> SearchOrderDetailsByOrderId(int orderId)
         {
             if (orderId < 0)
             {
@@ -30,7 +30,7 @@ namespace StoreManagement.BLL.Services
             }
             return _orderDetailsRepository.Search(orderId);
         }
-        public void UpdateOrderDetail(StoreManagement.DAL.Models.OrderDetail orderDetail)
+        public void UpdateOrderDetail(StoreManagement.DAL.Entities.OrderDetail orderDetail)
         {
             if (orderDetail == null)
             {

@@ -5,8 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StoreManager"
         mc:Ignorable="d"
-        Title="LoginWindow" Height="450" Width="800">
+        Title="LoginWindow" Height="450" Width="800" ResizeMode="NoResize">
     <Grid>
-        
+        <Label Content="LOGIN" HorizontalAlignment="Center" Margin="0,26,0,0" VerticalAlignment="Top" Width="101" FontSize="30"/>
+        <Label Content="Username" HorizontalAlignment="Left" Margin="131,136,0,0" VerticalAlignment="Top" FontSize="20"/>
+        <Label Content="Password" HorizontalAlignment="Left" Margin="131,180,0,0" VerticalAlignment="Top" FontSize="20"/>
+        <PasswordBox x:Name="txtPassword" HorizontalAlignment="Center" Margin="0,184,0,0" VerticalAlignment="Top" Width="310" Height="28"/>
+        <TextBox x:Name="txtUsername" HorizontalAlignment="Center" Margin="0,141,0,0" VerticalAlignment="Top" Width="310" Height="28"/>
+        <Button x:Name="btn_Login_Employee" Content="Login as Employee" HorizontalAlignment="Left" Margin="131,264,0,0" VerticalAlignment="Top" Width="193" Click="btn_Login_Employee_Click"/>
+        <Button x:Name="btn_Cancel" Content="Cancel" HorizontalAlignment="Left" Margin="331,310,0,0" VerticalAlignment="Top" Width="100" Click="btn_Cancel_Click"/>
+        <Button x:Name="btn_Login_Customer" Content="Login as Customer" HorizontalAlignment="Left" Margin="460,264,0,0" VerticalAlignment="Top" Width="193" Click="btn_Login_Customer_Click"/>
+
     </Grid>
 </Window>

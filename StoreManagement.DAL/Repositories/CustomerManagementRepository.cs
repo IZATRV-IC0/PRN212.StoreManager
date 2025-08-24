@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using StoreManagement.DAL.Models;
+using StoreManagement.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +18,10 @@ namespace StoreManagement.DAL.Repositories
         public List<Customer> GetAll()
         {
             return _context.Customers.ToList();
+        }
+        public Customer GetCustomerByUserNameAndPassword(string userName, string password)
+        {
+            return _context.Customers.FirstOrDefault(c => c.ContactName == userName && c.Phone == password);
         }
         public List<Customer> SearchByName(string name)
         {
