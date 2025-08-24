@@ -88,6 +88,11 @@ namespace StoreManager
         {
             var username = txtUsername.Text.Trim();
             var password = txtPassword.Password.Trim();
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            {
+                MessageBox.Show("Please enter both username and password.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
             //Customer login
             _customerService = new CustomerManagementService();
             var customer = _customerService.Login(username, password);

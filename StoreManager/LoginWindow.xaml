@@ -5,16 +5,288 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StoreManager"
         mc:Ignorable="d"
-        Title="LoginWindow" Height="450" Width="800" ResizeMode="NoResize">
-    <Grid>
-        <Label Content="LOGIN" HorizontalAlignment="Center" Margin="0,26,0,0" VerticalAlignment="Top" Width="101" FontSize="30"/>
-        <Label Content="Username" HorizontalAlignment="Left" Margin="131,136,0,0" VerticalAlignment="Top" FontSize="20"/>
-        <Label Content="Password" HorizontalAlignment="Left" Margin="131,180,0,0" VerticalAlignment="Top" FontSize="20"/>
-        <PasswordBox x:Name="txtPassword" HorizontalAlignment="Center" Margin="0,184,0,0" VerticalAlignment="Top" Width="310" Height="28"/>
-        <TextBox x:Name="txtUsername" HorizontalAlignment="Center" Margin="0,141,0,0" VerticalAlignment="Top" Width="310" Height="28"/>
-        <Button x:Name="btn_Login_Employee" Content="Login as Employee" HorizontalAlignment="Left" Margin="131,264,0,0" VerticalAlignment="Top" Width="193" Click="btn_Login_Employee_Click"/>
-        <Button x:Name="btn_Cancel" Content="Cancel" HorizontalAlignment="Left" Margin="331,310,0,0" VerticalAlignment="Top" Width="100" Click="btn_Cancel_Click"/>
-        <Button x:Name="btn_Login_Customer" Content="Login as Customer" HorizontalAlignment="Left" Margin="460,264,0,0" VerticalAlignment="Top" Width="193" Click="btn_Login_Customer_Click"/>
+        Title="Store Manager - Login" Height="1050" Width="1000" 
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        AllowsTransparency="True" WindowStyle="None">
 
+    <Window.Resources>
+        <!-- Gradient Brushes -->
+        <LinearGradientBrush x:Key="MainBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#667eea" Offset="0"/>
+            <GradientStop Color="#764ba2" Offset="0.5"/>
+            <GradientStop Color="#f093fb" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="CardBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#ffffff" Offset="0"/>
+            <GradientStop Color="#f8f9ff" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="PrimaryButtonBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#667eea" Offset="0"/>
+            <GradientStop Color="#764ba2" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="SecondaryButtonBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#f093fb" Offset="0"/>
+            <GradientStop Color="#f5576c" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="InputBorderBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#667eea" Offset="0"/>
+            <GradientStop Color="#764ba2" Offset="1"/>
+        </LinearGradientBrush>
+
+        <!-- Button Style -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="25"
+                                x:Name="border">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="Black" Direction="270" ShadowDepth="5" Opacity="0.3" BlurRadius="10"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.98" ScaleY="0.98"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- TextBox Style -->
+        <Style x:Key="ModernTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Padding" Value="15,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{StaticResource InputBorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="25">
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                          Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- PasswordBox Style -->
+        <Style x:Key="ModernPasswordBoxStyle" TargetType="PasswordBox">
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Padding" Value="15,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="PasswordBox">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{StaticResource InputBorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="25">
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                          Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Cancel Button Style -->
+        <Style x:Key="CancelButtonStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="Foreground" Value="#666"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="#ddd"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="20"
+                                x:Name="border">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#999"/>
+                                <Setter TargetName="border" Property="Background" Value="#f5f5f5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <!-- Main Container -->
+    <Grid Background="{StaticResource MainBackgroundBrush}" Margin="0,0,0,-111">
+
+        <!-- Close Button -->
+        <Button x:Name="btnClose" Content="✕" 
+                HorizontalAlignment="Right" VerticalAlignment="Top" 
+                Margin="0,15,20,0" Width="30" Height="30"
+                Background="Transparent" Foreground="White" 
+                BorderThickness="0" FontSize="18" FontWeight="Bold"
+                Cursor="Hand" Click="btn_Cancel_Click"/>
+
+        <!-- Login Card -->
+        <Border Background="{StaticResource CardBackgroundBrush}" 
+                CornerRadius="30" 
+                Width="450" Height="732"
+                HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Direction="270" ShadowDepth="10" 
+                                  Opacity="0.3" BlurRadius="30"/>
+            </Border.Effect>
+
+            <Grid Margin="50,40">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Logo/Icon Area -->
+                <Ellipse Grid.Row="0" Width="80" Height="80" 
+                         Fill="{StaticResource PrimaryButtonBrush}"
+                         HorizontalAlignment="Center"/>
+                <TextBlock Grid.Row="0" Text="🏪" FontSize="40" 
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Margin="0,5,0,0"/>
+
+                <!-- Title -->
+                <TextBlock Grid.Row="2" Text="STORE MANAGER" 
+                           FontSize="32" FontWeight="Bold" 
+                           HorizontalAlignment="Center"
+                           Foreground="#333">
+                    <TextBlock.Effect>
+                        <DropShadowEffect Color="Black" Direction="270" 
+                                          ShadowDepth="2" Opacity="0.1" BlurRadius="5"/>
+                    </TextBlock.Effect>
+                </TextBlock>
+
+                <TextBlock Grid.Row="2" Text="Welcome Back!" 
+                           FontSize="16" FontWeight="Regular" 
+                           HorizontalAlignment="Center" Margin="0,40,0,0"
+                           Foreground="#666"/>
+
+                <!-- Username Label -->
+                <TextBlock Grid.Row="4" Text="Username" 
+                           FontSize="16" FontWeight="Medium" 
+                           Foreground="#555" Margin="5,0,0,0"/>
+
+                <!-- Username Input -->
+                <TextBox Grid.Row="6" x:Name="txtUsername" 
+                         Style="{StaticResource ModernTextBoxStyle}"
+                         FontFamily="Segoe UI"/>
+
+                <!-- Password Label -->
+                <TextBlock Grid.Row="8" Text="Password" 
+                           FontSize="16" FontWeight="Medium" 
+                           Foreground="#555" Margin="5,0,0,0"/>
+
+                <!-- Password Input -->
+                <PasswordBox Grid.Row="10" x:Name="txtPassword" 
+                             Style="{StaticResource ModernPasswordBoxStyle}"
+                             FontFamily="Segoe UI"/>
+
+                <!-- Login Buttons -->
+                <StackPanel Grid.Row="11" Orientation="Vertical" 
+                            VerticalAlignment="Center" Margin="0,20,0,0">
+
+                    <Button x:Name="btn_Login_Employee" Content="🧑‍💼 Login as Employee"
+                            Style="{StaticResource ModernButtonStyle}"
+                            Background="{StaticResource PrimaryButtonBrush}"
+                            Click="btn_Login_Employee_Click"
+                            Margin="0,0,0,15"/>
+
+                    <Button x:Name="btn_Login_Customer" Content="👤 Login as Customer"
+                            Style="{StaticResource ModernButtonStyle}"
+                            Background="{StaticResource SecondaryButtonBrush}"
+                            Click="btn_Login_Customer_Click"/>
+                </StackPanel>
+
+                <!-- Cancel Button -->
+                <Button Grid.Row="12" x:Name="btn_Cancel" Content="Cancel"
+                        Style="{StaticResource CancelButtonStyle}"
+                        HorizontalAlignment="Center"
+                        Margin="0,20,0,0"
+                        Click="btn_Cancel_Click"/>
+            </Grid>
+        </Border>
+
+        <!-- Decorative Elements -->
+        <Ellipse Width="200" Height="200" 
+                 Fill="#30ffffff" 
+                 HorizontalAlignment="Left" VerticalAlignment="Top"
+                 Margin="-100,-100,0,0"/>
+
+        <Ellipse Width="150" Height="150" 
+                 Fill="#20ffffff" 
+                 HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                 Margin="0,0,-75,-75"/>
+
+        <Rectangle Width="300" Height="300" 
+                   Fill="#15ffffff" 
+                   HorizontalAlignment="Right" VerticalAlignment="Top"
+                   Margin="0,-150,-150,0">
+            <Rectangle.RenderTransform>
+                <RotateTransform Angle="45"/>
+            </Rectangle.RenderTransform>
+        </Rectangle>
     </Grid>
 </Window>
