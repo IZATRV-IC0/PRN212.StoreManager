@@ -61,14 +61,18 @@ namespace StoreManagement.BLL.Services
             }
             _customerManagementRepository.Update(customer);
         }
-        public void DeleteCustomer(int customerId)
+        public bool DeleteCustomer(int customerId)
         {
             _customerManagementRepository = new CustomerManagementRepository();
             if (customerId < 0)
             {
-                throw new ArgumentException("Invalid customer ID", nameof(customerId));
+                return false;
             }
-            _customerManagementRepository.Delete(customerId);
+            if (_customerManagementRepository.Delete(customerId)) 
+            { 
+                return true;
+            }
+            return false;
         }
     }
 }
