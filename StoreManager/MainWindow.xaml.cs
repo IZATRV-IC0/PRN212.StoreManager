@@ -18,19 +18,24 @@ namespace StoreManager
     /// </summary>
     public partial class MainWindow : Window
     {
+        private enum ManageMode
+        {
+            Customer,
+            Employee
+        }
+        private ManageMode _currentMode;
         Employee _employee;
         Customer _custormer;
         CustomerManagementService _customerManagementService;
+        EmployeeManagementService _employeeManagementService;
         public MainWindow()
         {
             InitializeComponent();
-            LoadCustomerData();
         }
         public MainWindow(Employee employee)
         {
             InitializeComponent();
             _employee = employee;
-            LoadCustomerData();
             switch (_employee.RoleNum)
             {
                 case 1:
@@ -70,57 +75,140 @@ namespace StoreManager
             _customerManagementService = new CustomerManagementService();
             dgCustomer.ItemsSource = _customerManagementService.GetAllCustomers().ToList();
         }
-
-        private void btn_CreateCustomer_Click(object sender, RoutedEventArgs e)
+        public void LoadEmployeeData()
         {
-            ManageCustomerWindow manageCustomerWindow = new();
-            manageCustomerWindow.lblEditor.Content = "Create New Customer";
-            manageCustomerWindow.ShowDialog();
-            dgCustomer.ItemsSource = null;
-            dgCustomer.ItemsSource = _customerManagementService.GetAllCustomers().ToList();
+            _employeeManagementService = new EmployeeManagementService();
+            dgEmployee.ItemsSource = _employeeManagementService.GetAllEmployees().ToList();
         }
-
-        private void btn_UpdateCustomer_Click(object sender, RoutedEventArgs e)
+        private void btn_Create_Click(object sender, RoutedEventArgs e)
         {
-            Customer selectedCustomer = dgCustomer.SelectedItem as Customer;
-            if (selectedCustomer != null)
+            if (_currentMode == ManageMode.Customer)
             {
-                ManageCustomerWindow updateWindow = new();
-                updateWindow.lblEditor.Content = "Update Customer";
-                updateWindow.customerEdit = selectedCustomer;
-                updateWindow.ShowDialog();
+                ManageCustomerWindow manageCustomerWindow = new();
+                manageCustomerWindow.lblEditor.Content = "Create New Customer";
+                manageCustomerWindow.ShowDialog();
                 dgCustomer.ItemsSource = null;
                 dgCustomer.ItemsSource = _customerManagementService.GetAllCustomers().ToList();
-            } else
+            }
+            else if (_currentMode == ManageMode.Employee)
             {
-                MessageBox.Show("Please select a customer to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                ManageEmployeeWindow manageEmployeeWindow = new();
+                manageEmployeeWindow.lblEditor.Content = "Create New Employee";
+                manageEmployeeWindow.ShowDialog();
+                dgEmployee.ItemsSource = null;
+                dgEmployee.ItemsSource = _employeeManagementService.GetAllEmployees().ToList();
             }
         }
 
-        private void btn_DeleteCustomer_Click(object sender, RoutedEventArgs e)
+        private void btn_Update_Click(object sender, RoutedEventArgs e)
         {
-            Customer customer = dgCustomer.SelectedItem as Customer;
-            if (customer != null)
+            if (_currentMode == ManageMode.Customer)
             {
-                MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete customer {customer.CustomerId}?", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                if (result == MessageBoxResult.Yes)
+                Customer selectedCustomer = dgCustomer.SelectedItem as Customer;
+                if (selectedCustomer != null)
                 {
-                    bool success = _customerManagementService.DeleteCustomer(customer.CustomerId);
-                    if (success)
-                    {
-                        MessageBox.Show("Customer deleted successfully.", "Deletion Successful", MessageBoxButton.OK, MessageBoxImage.Information);
-                        dgCustomer.ItemsSource = null;
-                        dgCustomer.ItemsSource = _customerManagementService.GetAllCustomers().ToList();
-                    }
-                    else
-                    {
-                        MessageBox.Show("Failed to delete customer. Maybe there is still an order for this customer.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                } else
+                    ManageCustomerWindow updateWindow = new();
+                    updateWindow.lblEditor.Content = "Update Customer";
+                    updateWindow.customerEdit = selectedCustomer;
+                    updateWindow.ShowDialog();
+                    dgCustomer.ItemsSource = null;
+                    dgCustomer.ItemsSource = _customerManagementService.GetAllCustomers().ToList();
+                }
+                else
                 {
-                    MessageBox.Show("Please select a customer to delete", "Uhh...", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("Please select a customer to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else if (_currentMode == ManageMode.Employee)
+            {
+                Employee selectedEmployee = dgEmployee.SelectedItem as Employee;
+                if (selectedEmployee != null)
+                {
+                    ManageEmployeeWindow updateWindow = new();
+                    updateWindow.lblEditor.Content = "Update Employee";
+                    updateWindow.employeeEdit = selectedEmployee;
+                    updateWindow.ShowDialog();
+                    dgEmployee.ItemsSource = null;
+                    dgEmployee.ItemsSource = _employeeManagementService.GetAllEmployees().ToList();
+                }
+                else
+                {
+                    MessageBox.Show("Please select an employee to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
         }
+
+        private void btn_Delete_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentMode == ManageMode.Customer)
+            {
+                Customer customer = dgCustomer.SelectedItem as Customer;
+                if (customer != null)
+                {
+                    MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete customer {customer.CustomerId}?", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        bool success = _customerManagementService.DeleteCustomer(customer.CustomerId);
+                        if (success)
+                        {
+                            MessageBox.Show("Customer deleted successfully.", "Deletion Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                            dgCustomer.ItemsSource = null;
+                            dgCustomer.ItemsSource = _customerManagementService.GetAllCustomers().ToList();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to delete customer. Maybe there is still an order for this customer.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                    
+                }
+                else
+                    {
+                        MessageBox.Show("Please select a customer to delete", "Uhh...", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+            }
+            else if (_currentMode == ManageMode.Employee)
+            {
+                Employee employee = dgEmployee.SelectedItem as Employee;
+                if (employee != null)
+                {
+                    MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete employee {employee.EmployeeId}?", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        bool success = _employeeManagementService.DeleteEmployee(employee.EmployeeId);
+                        if (success)
+                        {
+                            MessageBox.Show("Employee deleted successfully.", "Deletion Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                            dgEmployee.ItemsSource = null;
+                            dgEmployee.ItemsSource = _employeeManagementService.GetAllEmployees().ToList();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to delete employee. Maybe there is still an order for this employee.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                }    else
+                    {
+                        MessageBox.Show("Please select an employee to delete", "Uhh...", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+            }
+        }
+
+        private void btn_CustomerMenu_Click(object sender, RoutedEventArgs e)
+        {
+            _currentMode = ManageMode.Customer;
+            dgCustomer.Visibility = Visibility.Visible;
+            dgEmployee.Visibility = Visibility.Collapsed;
+            LoadCustomerData();
+        }
+
+        private void btn_EmployeeMenu_Click(object sender, RoutedEventArgs e)
+        {
+            _currentMode = ManageMode.Employee;
+            dgCustomer.Visibility = Visibility.Collapsed;
+            dgEmployee.Visibility = Visibility.Visible;
+            LoadEmployeeData();
+        }
+
     }
 }

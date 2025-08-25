@@ -54,14 +54,23 @@ namespace StoreManagement.DAL.Repositories
                 _context.SaveChanges();
             }
         }
-        public void Delete(int employeeId)
+        public bool Delete(int employeeId)
         {
-            var employee = _context.Employees.Find(employeeId);
-            if (employee != null)
+            try
             {
-                _context.Employees.Remove(employee);
-                _context.SaveChanges();
+                var employee = _context.Employees.Find(employeeId);
+                if (employee != null)
+                {
+                    _context.Employees.Remove(employee);
+                    _context.SaveChanges();
+                    return true;
+                }
             }
+            catch (DbUpdateException)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
