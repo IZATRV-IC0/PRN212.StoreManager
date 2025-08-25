@@ -22,7 +22,8 @@ namespace StoreManager
         {
             Customer,
             Employee,
-            Product
+            Product,
+            Category
         }
         private ManageMode _currentMode;
         Employee _employee;
@@ -30,6 +31,7 @@ namespace StoreManager
         CustomerManagementService _customerManagementService;
         EmployeeManagementService _employeeManagementService;
         ProductService _productService;
+        CategoryService _categoryService;
         public MainWindow()
         {
             InitializeComponent();
@@ -87,6 +89,11 @@ namespace StoreManager
             _productService = new ProductService();
             dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
         }
+        public void LoadCategoryData()
+        {
+            _categoryService = new CategoryService();
+            dgCategory.ItemsSource = _categoryService.GetAllCategories().ToList();
+        }
         private void btn_Create_Click(object sender, RoutedEventArgs e)
         {
             if (_currentMode == ManageMode.Customer)
@@ -112,6 +119,14 @@ namespace StoreManager
                 manageProductWindow.ShowDialog();
                 dgProduct.ItemsSource = null;
                 dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
+            }
+            else if (_currentMode == ManageMode.Category)
+            {
+                ManageCategoryWindow manageCategoryWindow = new();
+                manageCategoryWindow.lblEditor.Content = "Create New Category";
+                manageCategoryWindow.ShowDialog();
+                dgCategory.ItemsSource = null;
+                dgCategory.ItemsSource = _categoryService.GetAllCategories().ToList();
             }
         }
 
@@ -166,6 +181,23 @@ namespace StoreManager
                 else
                 {
                     MessageBox.Show("Please select a product to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else if (_currentMode == ManageMode.Category)
+            {
+                Category selectedCategory = dgCategory.SelectedItem as Category;
+                if (selectedCategory != null)
+                {
+                    ManageCategoryWindow updateWindow = new();
+                    updateWindow.lblEditor.Content = "Update Category";
+                    updateWindow.categoryEdit = selectedCategory;
+                    updateWindow.ShowDialog();
+                    dgCategory.ItemsSource = null;
+                    dgCategory.ItemsSource = _categoryService.GetAllCategories().ToList();
+                }
+                else
+                {
+                    MessageBox.Show("Please select a category to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
         }
@@ -251,6 +283,32 @@ namespace StoreManager
                     MessageBox.Show("Please select a product to delete", "Uhh...", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
+            else if (_currentMode == ManageMode.Category)
+            {
+                Category category = dgCategory.SelectedItem as Category;
+                if (category != null)
+                {
+                    MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete category {category.CategoryId}?", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        bool success = _categoryService.DeleteCategory(category.CategoryId);
+                        if (success)
+                        {
+                            MessageBox.Show("Category deleted successfully.", "Deletion Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                            dgCategory.ItemsSource = null;
+                            dgCategory.ItemsSource = _categoryService.GetAllCategories().ToList();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to delete category. Maybe there is still a product for this category.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please select a category to delete", "Uhh...", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
         }
 
         private void btn_CustomerMenu_Click(object sender, RoutedEventArgs e)
@@ -259,6 +317,7 @@ namespace StoreManager
             dgCustomer.Visibility = Visibility.Visible;
             dgEmployee.Visibility = Visibility.Collapsed;
             dgProduct.Visibility = Visibility.Collapsed;
+            dgCategory.Visibility = Visibility.Collapsed;
             LoadCustomerData();
         }
 
@@ -268,6 +327,7 @@ namespace StoreManager
             dgCustomer.Visibility = Visibility.Collapsed;
             dgEmployee.Visibility = Visibility.Visible;
             dgProduct.Visibility = Visibility.Collapsed;
+            dgCategory.Visibility = Visibility.Collapsed;
             LoadEmployeeData();
         }
 
@@ -277,7 +337,18 @@ namespace StoreManager
             dgCustomer.Visibility = Visibility.Collapsed;
             dgEmployee.Visibility = Visibility.Collapsed;
             dgProduct.Visibility = Visibility.Visible;
+            dgCategory.Visibility = Visibility.Collapsed;
             LoadProductData();
+        }
+
+        private void btn_Category_Click(object sender, RoutedEventArgs e)
+        {
+            _currentMode = ManageMode.Category;
+            dgCategory.Visibility = Visibility.Visible;
+            dgCustomer.Visibility = Visibility.Collapsed;
+            dgEmployee.Visibility = Visibility.Collapsed;
+            dgProduct.Visibility = Visibility.Collapsed;
+            LoadCategoryData();
         }
     }
 }

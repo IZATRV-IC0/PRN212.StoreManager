@@ -53,6 +53,14 @@
                 <DataGridTextColumn Header="Category Name" Binding="{Binding Category.CategoryName}" Width="150"/>
             </DataGrid.Columns>
         </DataGrid>
+        <Button x:Name="btn_Category" Content="Managing Category" HorizontalAlignment="Left" Margin="0,196,0,0" VerticalAlignment="Top" Width="240" Click="btn_Category_Click"/>
+        <DataGrid x:Name="dgCategory" Margin="261,76,22,164" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding CategoryId}" Width="*"/>
+                <DataGridTextColumn Header="Category Name" Binding="{Binding CategoryName}" Width="*"/>
+                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
 
     </Grid>
 </Window>
