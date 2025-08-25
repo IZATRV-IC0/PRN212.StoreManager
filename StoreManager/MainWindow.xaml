@@ -38,6 +38,21 @@
                 <DataGridTextColumn Header="Role" Binding="{Binding RoleNum}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
+        <Button x:Name="btn_Product" Content="Managing Product" HorizontalAlignment="Left" Margin="0,147,0,0" VerticalAlignment="Top" Width="240" Click="btn_Product_Click"/>
+        <DataGrid x:Name="dgProduct" Margin="261,76,22,164" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding ProductId}" Width="*"/>
+                <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" Width="150"/>
+                <DataGridTextColumn Header="Supplier ID" Binding="{Binding SupplierId}" Width="*"/>
+                <DataGridTextColumn Header="Quantity/Unit" Binding="{Binding QuantityPerUnit}" Width="*"/>
+                <DataGridTextColumn Header="Price" Binding="{Binding UnitPrice}" Width="*"/>
+                <DataGridTextColumn Header="Units" Binding="{Binding UnitsInStock}" Width="*"/>
+                <DataGridTextColumn Header="Unit Orders" Binding="{Binding UnitsOnOrder}" Width="*"/>
+                <DataGridTextColumn Header="Reorder Level" Binding="{Binding ReorderLevel}" Width="*"/>
+                <DataGridCheckBoxColumn Header="Discontinued" Binding="{Binding Discontinued}" Width="*"/>
+                <DataGridTextColumn Header="Category Name" Binding="{Binding Category.CategoryName}" Width="150"/>
+            </DataGrid.Columns>
+        </DataGrid>
 
     </Grid>
 </Window>

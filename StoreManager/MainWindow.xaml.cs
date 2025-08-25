@@ -21,13 +21,15 @@ namespace StoreManager
         private enum ManageMode
         {
             Customer,
-            Employee
+            Employee,
+            Product
         }
         private ManageMode _currentMode;
         Employee _employee;
         Customer _custormer;
         CustomerManagementService _customerManagementService;
         EmployeeManagementService _employeeManagementService;
+        ProductService _productService;
         public MainWindow()
         {
             InitializeComponent();
@@ -80,6 +82,11 @@ namespace StoreManager
             _employeeManagementService = new EmployeeManagementService();
             dgEmployee.ItemsSource = _employeeManagementService.GetAllEmployees().ToList();
         }
+        public void LoadProductData()
+        {
+            _productService = new ProductService();
+            dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
+        }
         private void btn_Create_Click(object sender, RoutedEventArgs e)
         {
             if (_currentMode == ManageMode.Customer)
@@ -97,6 +104,14 @@ namespace StoreManager
                 manageEmployeeWindow.ShowDialog();
                 dgEmployee.ItemsSource = null;
                 dgEmployee.ItemsSource = _employeeManagementService.GetAllEmployees().ToList();
+            }
+            else if (_currentMode == ManageMode.Product)
+            {
+                ManageProductWindow manageProductWindow = new();
+                manageProductWindow.lblEditor.Content = "Create New Product";
+                manageProductWindow.ShowDialog();
+                dgProduct.ItemsSource = null;
+                dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
             }
         }
 
@@ -136,6 +151,23 @@ namespace StoreManager
                     MessageBox.Show("Please select an employee to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
+            else if (_currentMode == ManageMode.Product)
+            {
+                Product selectedProduct = dgProduct.SelectedItem as Product;
+                if (selectedProduct != null)
+                {
+                    ManageProductWindow updateWindow = new();
+                    updateWindow.lblEditor.Content = "Update Product";
+                    updateWindow.productEdit = selectedProduct;
+                    updateWindow.ShowDialog();
+                    dgProduct.ItemsSource = null;
+                    dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
+                }
+                else
+                {
+                    MessageBox.Show("Please select a product to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
         }
 
         private void btn_Delete_Click(object sender, RoutedEventArgs e)
@@ -160,12 +192,12 @@ namespace StoreManager
                             MessageBox.Show("Failed to delete customer. Maybe there is still an order for this customer.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
-                    
+
                 }
                 else
-                    {
-                        MessageBox.Show("Please select a customer to delete", "Uhh...", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    }
+                {
+                    MessageBox.Show("Please select a customer to delete", "Uhh...", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
             else if (_currentMode == ManageMode.Employee)
             {
@@ -187,10 +219,37 @@ namespace StoreManager
                             MessageBox.Show("Failed to delete employee. Maybe there is still an order for this employee.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
                         }
                     }
-                }    else
+                }
+                else
+                {
+                    MessageBox.Show("Please select an employee to delete", "Uhh...", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else if (_currentMode == ManageMode.Product)
+            {
+                Product product = dgProduct.SelectedItem as Product;
+                if (product != null)
+                {
+                    MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete product {product.ProductId}?", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    if (result == MessageBoxResult.Yes)
                     {
-                        MessageBox.Show("Please select an employee to delete", "Uhh...", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        bool success = _productService.DeleteProduct(product.ProductId);
+                        if (success)
+                        {
+                            MessageBox.Show("Product deleted successfully.", "Deletion Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                            dgProduct.ItemsSource = null;
+                            dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to delete product. Maybe there is still an order for this product.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
                     }
+                }
+                else
+                {
+                    MessageBox.Show("Please select a product to delete", "Uhh...", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
         }
 
@@ -199,6 +258,7 @@ namespace StoreManager
             _currentMode = ManageMode.Customer;
             dgCustomer.Visibility = Visibility.Visible;
             dgEmployee.Visibility = Visibility.Collapsed;
+            dgProduct.Visibility = Visibility.Collapsed;
             LoadCustomerData();
         }
 
@@ -207,8 +267,17 @@ namespace StoreManager
             _currentMode = ManageMode.Employee;
             dgCustomer.Visibility = Visibility.Collapsed;
             dgEmployee.Visibility = Visibility.Visible;
+            dgProduct.Visibility = Visibility.Collapsed;
             LoadEmployeeData();
         }
 
+        private void btn_Product_Click(object sender, RoutedEventArgs e)
+        {
+            _currentMode = ManageMode.Product;
+            dgCustomer.Visibility = Visibility.Collapsed;
+            dgEmployee.Visibility = Visibility.Collapsed;
+            dgProduct.Visibility = Visibility.Visible;
+            LoadProductData();
+        }
     }
 }
