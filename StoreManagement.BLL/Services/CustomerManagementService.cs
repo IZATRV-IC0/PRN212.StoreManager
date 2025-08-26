@@ -61,14 +61,41 @@ namespace StoreManagement.BLL.Services
             }
             _customerManagementRepository.Update(customer);
         }
-        public void DeleteCustomer(int customerId)
+        public bool DeleteCustomer(int customerId)
         {
             _customerManagementRepository = new CustomerManagementRepository();
             if (customerId < 0)
             {
-                throw new ArgumentException("Invalid customer ID", nameof(customerId));
+                return false;
             }
-            _customerManagementRepository.Delete(customerId);
+            if (_customerManagementRepository.Delete(customerId)) 
+            { 
+                return true;
+            }
+            return false;
+        }
+        // Thêm khách hàng mới hoặc cập nhật nếu đã tồn tại
+        public void AddOrUpdateCustomer(Customer customer)
+        {
+            _customerManagementRepository = new CustomerManagementRepository();
+            if (customer == null)
+            {
+                throw new ArgumentNullException(nameof(customer), "Customer cannot be null");
+            }
+
+            var existingCustomer = _customerManagementRepository
+                .SearchByName(customer.ContactName)
+                .FirstOrDefault(c => c.Phone == customer.Phone);
+
+            if (existingCustomer == null)
+            {
+                _customerManagementRepository.Add(customer);
+            }
+            else
+            {
+                customer.CustomerId = existingCustomer.CustomerId;
+                _customerManagementRepository.Update(customer);
+            }
         }
     }
 }

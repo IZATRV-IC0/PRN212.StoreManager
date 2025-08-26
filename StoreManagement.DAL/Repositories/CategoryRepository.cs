@@ -1,4 +1,5 @@
-﻿using StoreManagement.DAL.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using StoreManagement.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,14 +35,23 @@ namespace StoreManagement.DAL.Repositories
                 _context.SaveChanges();
             }
         }
-        public void Delete(int categoryId)
+        public bool Delete(int categoryId)
         {
-            var c = _context.Categories.FirstOrDefault(ct => ct.CategoryId == categoryId);
-            if (c != null)
+            try
             {
-                _context.Categories.Remove(c);
-                _context.SaveChanges();
+                var c = _context.Categories.FirstOrDefault(ct => ct.CategoryId == categoryId);
+                if (c != null)
+                {
+                    _context.Categories.Remove(c);
+                    _context.SaveChanges();
+                }
+                return true;
             }
+            catch (DbUpdateException ex)
+            {
+                return false;
+            }
+            return false;
         }
     }
 }

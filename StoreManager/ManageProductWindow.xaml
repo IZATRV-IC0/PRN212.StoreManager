@@ -1,0 +1,40 @@
+﻿<Window x:Class="StoreManager.ManageProductWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Manage Product Window" Height="600" Width="800" Loaded="Window_Loaded">
+    <Grid>
+        <Label x:Name="lblProductID" Content="Product ID" FontSize="16" HorizontalAlignment="Left" Margin="40,40,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtProductID" HorizontalAlignment="Left" Margin="180,45,0,0" Width="200" VerticalAlignment="Top"/>
+
+        <Label Content="Product Name" FontSize="16" HorizontalAlignment="Left" Margin="40,80,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtProductName" HorizontalAlignment="Left" Margin="180,85,0,0" Width="200" VerticalAlignment="Top"/>
+
+        <Label Content="Supplier ID" FontSize="16" HorizontalAlignment="Left" Margin="40,120,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtSupplierId" HorizontalAlignment="Left" Margin="180,125,0,0" Width="200" VerticalAlignment="Top"/>
+
+        <Label Content="Category ID" FontSize="16" HorizontalAlignment="Left" Margin="40,160,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtCategoryId" HorizontalAlignment="Left" Margin="180,165,0,0" Width="200" VerticalAlignment="Top"/>
+
+        <Label Content="Quantity/Unit" FontSize="16" HorizontalAlignment="Left" Margin="40,200,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtQuantityPerUnit" HorizontalAlignment="Left" Margin="180,205,0,0" Width="200" VerticalAlignment="Top"/>
+
+        <Label Content="Unit Price" FontSize="16" HorizontalAlignment="Left" Margin="40,240,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtUnitPrice" HorizontalAlignment="Left" Margin="180,245,0,0" Width="200" VerticalAlignment="Top"/>
+
+        <Label Content="Units In Stock" FontSize="16" HorizontalAlignment="Left" Margin="40,280,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtUnitsInStock" HorizontalAlignment="Left" Margin="180,285,0,0" Width="200" VerticalAlignment="Top"/>
+
+        <Label Content="Units On Order" FontSize="16" HorizontalAlignment="Left" Margin="40,320,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtUnitsOnOrder" HorizontalAlignment="Left" Margin="180,325,0,0" Width="200" VerticalAlignment="Top"/>
+
+        <Label Content="Reorder Level" FontSize="16" HorizontalAlignment="Left" Margin="40,360,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtReorderLevel" HorizontalAlignment="Left" Margin="180,365,0,0" Width="200" VerticalAlignment="Top"/>
+
+        <CheckBox x:Name="chkDiscontinued" Content="Discontinued" FontSize="16" HorizontalAlignment="Left" Margin="180,400,0,0" VerticalAlignment="Top"/>
+
+        <Button x:Name="btn_SaveProduct" Content="Save" HorizontalAlignment="Left" Margin="180,450,0,0" Width="100" VerticalAlignment="Top" Click="btn_SaveProduct_Click"/>
+        <Button x:Name="btn_CancelProduct" Content="Cancel" HorizontalAlignment="Left" Margin="300,450,0,0" Width="100" VerticalAlignment="Top" Click="btn_CancelProduct_Click"/>
+
+        <Label x:Name="lblEditor" Content="Create/Update Product" FontSize="24" FontWeight="Bold" HorizontalAlignment="Left" Margin="40,0,0,0" VerticalAlignment="Top"/>
+    </Grid>
+</Window>

@@ -38,13 +38,17 @@ namespace StoreManagement.BLL.Services
             }
             _productRepository.Update(product);
         }
-        public void DeleteProduct(int productId)
+        public bool DeleteProduct(int productId)
         {
             if (productId < 0)
             {
                 throw new ArgumentException("Invalid product ID", nameof(productId));
             }
-            _productRepository.Delete(productId);
+            if (_productRepository.Delete(productId))
+            {
+                return true;
+            }
+            return false;
         }
         public void AddProduct(StoreManagement.DAL.Entities.Product product)
         {

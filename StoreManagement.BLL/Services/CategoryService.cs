@@ -33,13 +33,17 @@ namespace StoreManagement.BLL.Services
             }
             _categoryRepository.Update(category);
         }
-        public void DeleteCategory(int categoryId)
+        public bool DeleteCategory(int categoryId)
         {
             if (categoryId < 0)
             {
                 throw new ArgumentException("Invalid category ID", nameof(categoryId));
             }
-            _categoryRepository.Delete(categoryId);
+            if (_categoryRepository.Delete(categoryId))
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

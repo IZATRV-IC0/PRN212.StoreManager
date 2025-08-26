@@ -18,8 +18,28 @@ namespace StoreManager
     /// </summary>
     public partial class MainWindow : Window
     {
+<<<<<<< HEAD
         Employee? _employee;
         Customer? _customer;
+=======
+        private enum ManageMode
+        {
+            Customer,
+            Employee,
+            Product,
+            Category,
+            Order
+        }
+        private ManageMode _currentMode;
+        Employee _employee;
+        Customer _custormer;
+        CustomerManagementService _customerManagementService;
+        EmployeeManagementService _employeeManagementService;
+        ProductService _productService;
+        CategoryService _categoryService;
+        OrderService _orderService;
+        OrderDetailsService _orderDetailsService;
+>>>>>>> f5ccb8dae706c2f16cb6bb5ec313d9d2de03d286
         public MainWindow()
         {
             InitializeComponent();
@@ -28,18 +48,19 @@ namespace StoreManager
         {
             InitializeComponent();
             _employee = employee;
+<<<<<<< HEAD
             pnlEmployeeMenu.Visibility = Visibility.Visible;
             pnlCustomerMenu.Visibility = Visibility.Collapsed;
             
             switch(_employee.RoleNum)
+=======
+            switch (_employee.RoleNum)
+>>>>>>> f5ccb8dae706c2f16cb6bb5ec313d9d2de03d286
             {
                 case 1:
                     // Admin role
                     lblRole.Content = "Admin Dashboard";
-                    break;
-                case 2:
-                    // Manager role
-                    lblRole.Content = "Manager Dashboard";
+                    lbl_NameGreeting.Content = "Hello, " + _employee.Name;
                     break;
                 case 3:
                     // Staff role
@@ -76,6 +97,7 @@ namespace StoreManager
             loginWindow.Show();
             this.Close();
         }
+<<<<<<< HEAD
 
         private void btnViewProducts_Click(object sender, RoutedEventArgs e)
         {
@@ -136,6 +158,343 @@ namespace StoreManager
                 ShoppingCartService.Instance.CartChanged -= OnCartChanged;
             }
             base.OnClosed(e);
+=======
+        public void LoadCustomerData()
+        {
+            _customerManagementService = new CustomerManagementService();
+            dgCustomer.ItemsSource = _customerManagementService.GetAllCustomers().ToList();
+        }
+        public void LoadEmployeeData()
+        {
+            _employeeManagementService = new EmployeeManagementService();
+            dgEmployee.ItemsSource = _employeeManagementService.GetAllEmployees().ToList();
+        }
+        public void LoadProductData()
+        {
+            _productService = new ProductService();
+            dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
+        }
+        public void LoadCategoryData()
+        {
+            _categoryService = new CategoryService();
+            dgCategory.ItemsSource = _categoryService.GetAllCategories().ToList();
+        }
+        public void LoadOrderData()
+        {
+            _orderService = new OrderService();
+            dgOrder.ItemsSource = _orderService.GetAllOrders().ToList();
+        }
+        public void LoadOrderDetailsData()
+        {
+            _orderDetailsService = new OrderDetailsService();
+            dgOrderDetail.ItemsSource = _orderDetailsService.GetAllOrderDetails().ToList();
+        }
+        private void btn_Create_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentMode == ManageMode.Customer)
+            {
+                ManageCustomerWindow manageCustomerWindow = new();
+                manageCustomerWindow.lblEditor.Content = "Create New Customer";
+                manageCustomerWindow.ShowDialog();
+                dgCustomer.ItemsSource = null;
+                dgCustomer.ItemsSource = _customerManagementService.GetAllCustomers().ToList();
+            }
+            else if (_currentMode == ManageMode.Employee)
+            {
+                ManageEmployeeWindow manageEmployeeWindow = new();
+                manageEmployeeWindow.lblEditor.Content = "Create New Employee";
+                manageEmployeeWindow.ShowDialog();
+                dgEmployee.ItemsSource = null;
+                dgEmployee.ItemsSource = _employeeManagementService.GetAllEmployees().ToList();
+            }
+            else if (_currentMode == ManageMode.Product)
+            {
+                ManageProductWindow manageProductWindow = new();
+                manageProductWindow.lblEditor.Content = "Create New Product";
+                manageProductWindow.ShowDialog();
+                dgProduct.ItemsSource = null;
+                dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
+            }
+            else if (_currentMode == ManageMode.Category)
+            {
+                ManageCategoryWindow manageCategoryWindow = new();
+                manageCategoryWindow.lblEditor.Content = "Create New Category";
+                manageCategoryWindow.ShowDialog();
+                dgCategory.ItemsSource = null;
+                dgCategory.ItemsSource = _categoryService.GetAllCategories().ToList();
+            }
+        }
+
+        private void btn_Update_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentMode == ManageMode.Customer)
+            {
+                Customer selectedCustomer = dgCustomer.SelectedItem as Customer;
+                if (selectedCustomer != null)
+                {
+                    ManageCustomerWindow updateWindow = new();
+                    updateWindow.lblEditor.Content = "Update Customer";
+                    updateWindow.customerEdit = selectedCustomer;
+                    updateWindow.ShowDialog();
+                    dgCustomer.ItemsSource = null;
+                    dgCustomer.ItemsSource = _customerManagementService.GetAllCustomers().ToList();
+                }
+                else
+                {
+                    MessageBox.Show("Please select a customer to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else if (_currentMode == ManageMode.Employee)
+            {
+                Employee selectedEmployee = dgEmployee.SelectedItem as Employee;
+                if (selectedEmployee != null)
+                {
+                    ManageEmployeeWindow updateWindow = new();
+                    updateWindow.lblEditor.Content = "Update Employee";
+                    updateWindow.employeeEdit = selectedEmployee;
+                    updateWindow.ShowDialog();
+                    dgEmployee.ItemsSource = null;
+                    dgEmployee.ItemsSource = _employeeManagementService.GetAllEmployees().ToList();
+                }
+                else
+                {
+                    MessageBox.Show("Please select an employee to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else if (_currentMode == ManageMode.Product)
+            {
+                Product selectedProduct = dgProduct.SelectedItem as Product;
+                if (selectedProduct != null)
+                {
+                    ManageProductWindow updateWindow = new();
+                    updateWindow.lblEditor.Content = "Update Product";
+                    updateWindow.productEdit = selectedProduct;
+                    updateWindow.ShowDialog();
+                    dgProduct.ItemsSource = null;
+                    dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
+                }
+                else
+                {
+                    MessageBox.Show("Please select a product to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else if (_currentMode == ManageMode.Category)
+            {
+                Category selectedCategory = dgCategory.SelectedItem as Category;
+                if (selectedCategory != null)
+                {
+                    ManageCategoryWindow updateWindow = new();
+                    updateWindow.lblEditor.Content = "Update Category";
+                    updateWindow.categoryEdit = selectedCategory;
+                    updateWindow.ShowDialog();
+                    dgCategory.ItemsSource = null;
+                    dgCategory.ItemsSource = _categoryService.GetAllCategories().ToList();
+                }
+                else
+                {
+                    MessageBox.Show("Please select a category to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else if (_currentMode == ManageMode.Order)
+            {
+                Order selectedOrder = dgOrder.SelectedItem as Order;
+                if (selectedOrder != null)
+                {
+                    ManageOrderWindow updateWindow = new ManageOrderWindow();
+                    updateWindow.OrderEdit = selectedOrder;
+                    updateWindow.ShowDialog();
+
+                    LoadOrderData();
+                    dgOrderDetail.ItemsSource = null;
+                }
+                else
+                {
+                    MessageBox.Show("Please select an order to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+        }
+
+        private void btn_Delete_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentMode == ManageMode.Customer)
+            {
+                Customer customer = dgCustomer.SelectedItem as Customer;
+                if (customer != null)
+                {
+                    MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete customer {customer.CustomerId}?", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        bool success = _customerManagementService.DeleteCustomer(customer.CustomerId);
+                        if (success)
+                        {
+                            MessageBox.Show("Customer deleted successfully.", "Deletion Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                            dgCustomer.ItemsSource = null;
+                            dgCustomer.ItemsSource = _customerManagementService.GetAllCustomers().ToList();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to delete customer. Maybe there is still an order for this customer.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+
+                }
+                else
+                {
+                    MessageBox.Show("Please select a customer to delete", "Uhh...", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else if (_currentMode == ManageMode.Employee)
+            {
+                Employee employee = dgEmployee.SelectedItem as Employee;
+                if (employee != null)
+                {
+                    MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete employee {employee.EmployeeId}?", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        bool success = _employeeManagementService.DeleteEmployee(employee.EmployeeId);
+                        if (success)
+                        {
+                            MessageBox.Show("Employee deleted successfully.", "Deletion Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                            dgEmployee.ItemsSource = null;
+                            dgEmployee.ItemsSource = _employeeManagementService.GetAllEmployees().ToList();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to delete employee. Maybe there is still an order for this employee.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please select an employee to delete", "Uhh...", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else if (_currentMode == ManageMode.Product)
+            {
+                Product product = dgProduct.SelectedItem as Product;
+                if (product != null)
+                {
+                    MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete product {product.ProductId}?", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        bool success = _productService.DeleteProduct(product.ProductId);
+                        if (success)
+                        {
+                            MessageBox.Show("Product deleted successfully.", "Deletion Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                            dgProduct.ItemsSource = null;
+                            dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to delete product. Maybe there is still an order for this product.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please select a product to delete", "Uhh...", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else if (_currentMode == ManageMode.Category)
+            {
+                Category category = dgCategory.SelectedItem as Category;
+                if (category != null)
+                {
+                    MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete category {category.CategoryId}?", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        bool success = _categoryService.DeleteCategory(category.CategoryId);
+                        if (success)
+                        {
+                            MessageBox.Show("Category deleted successfully.", "Deletion Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                            dgCategory.ItemsSource = null;
+                            dgCategory.ItemsSource = _categoryService.GetAllCategories().ToList();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to delete category. Maybe there is still a product for this category.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please select a category to delete", "Uhh...", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+        }
+
+        private void btn_CustomerMenu_Click(object sender, RoutedEventArgs e)
+        {
+            _currentMode = ManageMode.Customer;
+            dgCustomer.Visibility = Visibility.Visible;
+            dgEmployee.Visibility = Visibility.Collapsed;
+            dgProduct.Visibility = Visibility.Collapsed;
+            dgCategory.Visibility = Visibility.Collapsed;
+            dgOrder.Visibility = Visibility.Collapsed;
+            dgOrderDetail.Visibility = Visibility.Collapsed;
+            LoadCustomerData();
+        }
+
+        private void btn_EmployeeMenu_Click(object sender, RoutedEventArgs e)
+        {
+            _currentMode = ManageMode.Employee;
+            dgCustomer.Visibility = Visibility.Collapsed;
+            dgEmployee.Visibility = Visibility.Visible;
+            dgProduct.Visibility = Visibility.Collapsed;
+            dgCategory.Visibility = Visibility.Collapsed;
+            dgOrder.Visibility = Visibility.Collapsed;
+            dgOrderDetail.Visibility = Visibility.Collapsed;
+            LoadEmployeeData();
+        }
+
+        private void btn_Product_Click(object sender, RoutedEventArgs e)
+        {
+            _currentMode = ManageMode.Product;
+            dgCustomer.Visibility = Visibility.Collapsed;
+            dgEmployee.Visibility = Visibility.Collapsed;
+            dgProduct.Visibility = Visibility.Visible;
+            dgCategory.Visibility = Visibility.Collapsed;
+            dgOrderDetail.Visibility = Visibility.Collapsed;
+            dgOrder.Visibility = Visibility.Collapsed;
+            LoadProductData();
+        }
+
+        private void btn_Category_Click(object sender, RoutedEventArgs e)
+        {
+            _currentMode = ManageMode.Category;
+            dgCategory.Visibility = Visibility.Visible;
+            dgCustomer.Visibility = Visibility.Collapsed;
+            dgEmployee.Visibility = Visibility.Collapsed;
+            dgProduct.Visibility = Visibility.Collapsed;
+            dgOrderDetail.Visibility = Visibility.Collapsed;
+            dgOrder.Visibility = Visibility.Collapsed;
+            LoadCategoryData();
+        }
+
+        private void btn_OrderManager_Click(object sender, RoutedEventArgs e)
+        {
+            _currentMode = ManageMode.Order;
+            btn_Create.Visibility = Visibility.Collapsed;
+            btn_Delete.Visibility = Visibility.Collapsed;
+            dgOrder.Visibility = Visibility.Visible;
+            dgOrderDetail.Visibility = Visibility.Visible;
+            dgCategory.Visibility = Visibility.Collapsed;
+            dgCustomer.Visibility = Visibility.Collapsed;
+            dgEmployee.Visibility = Visibility.Collapsed;
+            dgProduct.Visibility = Visibility.Collapsed;
+            LoadOrderData();
+            dgOrderDetail.ItemsSource = null;
+        }
+        //AI helps because I haven't studied about DataGrid SelectionChanged event before
+        private void dgOrder_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedOrder = dgOrder.SelectedItem as Order;
+            if (selectedOrder != null)
+            {
+                _orderDetailsService = new OrderDetailsService();
+                dgOrderDetail.ItemsSource = _orderDetailsService.GetOrderDetailsByOrderId(selectedOrder.OrderId);
+            }
+>>>>>>> f5ccb8dae706c2f16cb6bb5ec313d9d2de03d286
         }
     }
 }

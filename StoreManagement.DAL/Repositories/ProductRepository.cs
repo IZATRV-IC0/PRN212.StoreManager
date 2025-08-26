@@ -70,14 +70,22 @@ namespace StoreManagement.DAL.Repositories
                 _context.SaveChanges();
             }
         }
-        public void Delete(int productId)
+        public bool Delete(int productId)
         {
-            var p = _context.Products.FirstOrDefault(pr => pr.ProductId == productId);
-            if (p != null)
+            try
             {
-                _context.Products.Remove(p);
-                _context.SaveChanges();
+                var p = _context.Products.FirstOrDefault(pr => pr.ProductId == productId);
+                if (p != null)
+                {
+                    _context.Products.Remove(p);
+                    _context.SaveChanges();
+                    return true;
+                }
+            } catch (DbUpdateException ex)
+            {
+                return false;
             }
+            return false;
         }
     }
 }

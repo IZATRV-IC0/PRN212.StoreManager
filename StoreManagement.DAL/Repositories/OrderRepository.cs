@@ -100,12 +100,17 @@ namespace StoreManagement.DAL.Repositories
                 _context.SaveChanges();
             }
         }
+<<<<<<< HEAD
         
         public List<Order> GetOrdersByCustomerId(int customerId)
+=======
+        public List<Order> GetOrdersByEmployeeId(int employeeId)
+>>>>>>> f5ccb8dae706c2f16cb6bb5ec313d9d2de03d286
         {
             return _context.Orders
                 .Include(o => o.Customer)
                 .Include(o => o.Employee)
+<<<<<<< HEAD
                 .Include(o => o.OrderDetails)
                 .ThenInclude(od => od.Product)
                 .Where(o => o.CustomerId == customerId)
@@ -136,5 +141,11 @@ namespace StoreManagement.DAL.Repositories
                 throw new InvalidOperationException($"Failed to save order: {ex.Message}", ex);
             }
         }
+=======
+                .Where(o => o.EmployeeId == employeeId)
+                .ToList();
+        }
+
+>>>>>>> f5ccb8dae706c2f16cb6bb5ec313d9d2de03d286
     }
 }

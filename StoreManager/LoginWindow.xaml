@@ -261,7 +261,7 @@
                 </StackPanel>
 
                 <!-- Cancel Button -->
-                <Button Grid.Row="12" x:Name="btn_Cancel" Content="Cancel"
+                <Button Grid.Row="12" x:Name="btn_Cancel" Content="Exit"
                         Style="{StaticResource CancelButtonStyle}"
                         HorizontalAlignment="Center"
                         Margin="0,20,0,0"

@@ -51,14 +51,23 @@ namespace StoreManagement.DAL.Repositories
                 _context.SaveChanges();
             }
         }
-        public void Delete(int customerId)
+        public bool Delete(int customerId)
         {
-            var customer = _context.Customers.Find(customerId);
+            try {
+                var customer = _context.Customers.Find(customerId);
             if (customer != null)
             {
                 _context.Customers.Remove(customer);
                 _context.SaveChanges();
+                 return true;
+                }
             }
+            catch (DbUpdateException ex)
+            {
+                // Handle the exception (e.g., log it, rethrow it, etc.)
+                return false;
+            }
+            return false;
         }
     }
 }

@@ -81,7 +81,10 @@ namespace StoreManager
 
         private void btn_Cancel_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            if (MessageBox.Show("Are you sure you want to exit?", "Confirm Exit", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                Application.Current.Shutdown();
+            }
         }
 
         private void btn_Login_Customer_Click(object sender, RoutedEventArgs e)

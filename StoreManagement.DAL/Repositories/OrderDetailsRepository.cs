@@ -24,6 +24,14 @@ namespace StoreManagement.DAL.Repositories
         {
             return _context.OrderDetails.Include(o => o.Order).Include(o => o.Product).ToList();
         }
+        public List<OrderDetail> GetOrderDetailsByOrderId(int orderId)
+        {
+            return _context.OrderDetails
+                           .Include(od => od.Product)
+                           .Where(od => od.OrderId == orderId)
+                           .ToList();
+        }
+
         public List<OrderDetail> Search(int OrderId)
         {
             List<OrderDetail> orderDetails = new List<OrderDetail>();
@@ -56,5 +64,14 @@ namespace StoreManagement.DAL.Repositories
                 _context.SaveChanges();
             }
         }
+        public List<OrderDetail> GetOrderDetailsByEmployeeId(int employeeId)
+        {
+            return _context.OrderDetails
+                .Include(od => od.Order)
+                .Include(od => od.Product)
+                .Where(od => od.Order.EmployeeId == employeeId)
+                .ToList();
+        }
+
     }
 }

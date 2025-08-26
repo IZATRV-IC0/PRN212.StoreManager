@@ -1,0 +1,27 @@
+﻿<Window x:Class="StoreManager.ManageCustomerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StoreManager"
+        mc:Ignorable="d"
+        Title="Manage Customer Window" Height="450" Width="800" Loaded="Window_Loaded">
+    <Grid>
+        <Label x:Name="lblCustomerID" Content="Customer ID" FontSize="20" HorizontalAlignment="Left" Margin="122,65,0,0" VerticalAlignment="Top"/>
+        <Label Content="Company Name" FontSize="20" HorizontalAlignment="Left" Margin="122,107,0,0" VerticalAlignment="Top"/>
+        <Label Content="Contact Name" FontSize="20" HorizontalAlignment="Left" Margin="122,149,0,0" VerticalAlignment="Top"/>
+        <Label Content="Contact Title" FontSize="20" HorizontalAlignment="Left" Margin="121,191,0,0" VerticalAlignment="Top"/>
+        <Label Content="Address" FontSize="20" HorizontalAlignment="Left" Margin="121,233,0,0" VerticalAlignment="Top"/>
+        <Label Content="Phone" FontSize="20" HorizontalAlignment="Left" Margin="121,275,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="lblEditor" Content="CREATE/UPDATE" FontSize="30" FontWeight="Bold" HorizontalAlignment="Left" Margin="44,10,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtCustomerID" HorizontalAlignment="Left" Margin="314,74,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22"/>
+        <TextBox x:Name="txtPhone" HorizontalAlignment="Left" Margin="314,284,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22"/>
+        <TextBox x:Name="txtAddress" HorizontalAlignment="Left" Margin="314,243,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22"/>
+        <TextBox x:Name="txtContactTitle" HorizontalAlignment="Left" Margin="314,200,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22"/>
+        <TextBox x:Name="txtContactName" HorizontalAlignment="Left" Margin="314,158,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22"/>
+        <TextBox x:Name="txtCompanyName" HorizontalAlignment="Left" Margin="314,114,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22"/>
+        <Button x:Name="btn_CancelCustomer" Content="Cancel" HorizontalAlignment="Left" Margin="566,354,0,0" VerticalAlignment="Top" Width="110" Click="btn_CancelCustomer_Click"/>
+        <Button x:Name="btn_SaveCustomer" Content="Save" HorizontalAlignment="Left" Margin="247,354,0,0" VerticalAlignment="Top" Width="110" Click="btn_SaveCustomer_Click"/>
+
+    </Grid>
+</Window>

@@ -57,6 +57,7 @@ namespace StoreManagement.BLL.Services
             }
             _orderRepository.Delete(orderId);
         }
+<<<<<<< HEAD
         
         public List<StoreManagement.DAL.Entities.Order> GetOrdersByCustomerId(int customerId)
         {
@@ -84,5 +85,16 @@ namespace StoreManagement.BLL.Services
     public class OrderCreatedEventArgs : EventArgs
     {
         public Order Order { get; set; } = null!;
+=======
+        public List<StoreManagement.DAL.Entities.Order> GetOrdersByEmployee(int employeeId)
+        {
+            if (employeeId <= 0)
+            {
+                throw new ArgumentException("Invalid Employee ID", nameof(employeeId));
+            }
+            return _orderRepository.GetOrdersByEmployeeId(employeeId);
+        }
+
+>>>>>>> f5ccb8dae706c2f16cb6bb5ec313d9d2de03d286
     }
 }
