@@ -119,15 +119,6 @@
                 <DataGridTextColumn Header="Unit Price" Binding="{Binding UnitPrice, StringFormat=C}" Width="100"/>
                 <DataGridTextColumn Header="Quantity/Unit" Binding="{Binding QuantityPerUnit}" Width="150"/>
                 <DataGridTextColumn Header="In Stock" Binding="{Binding UnitsInStock}" Width="80"/>
-                <DataGridTextColumn Header="Status" Width="80">
-                    <DataGridTextColumn.Binding>
-                        <Binding Path="Discontinued">
-                            <Binding.Converter>
-                                <local:InverseBooleanToTextConverter/>
-                            </Binding.Converter>
-                        </Binding>
-                    </DataGridTextColumn.Binding>
-                </DataGridTextColumn>
                 <DataGridTemplateColumn Header="Actions" Width="200">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

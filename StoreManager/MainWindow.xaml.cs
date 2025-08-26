@@ -18,10 +18,6 @@ namespace StoreManager
     /// </summary>
     public partial class MainWindow : Window
     {
-<<<<<<< HEAD
-        Employee? _employee;
-        Customer? _customer;
-=======
         private enum ManageMode
         {
             Customer,
@@ -30,48 +26,54 @@ namespace StoreManager
             Category,
             Order
         }
+        
         private ManageMode _currentMode;
-        Employee _employee;
-        Customer _custormer;
+        Employee? _employee;
+        Customer? _customer;
         CustomerManagementService _customerManagementService;
         EmployeeManagementService _employeeManagementService;
         ProductService _productService;
         CategoryService _categoryService;
         OrderService _orderService;
         OrderDetailsService _orderDetailsService;
->>>>>>> f5ccb8dae706c2f16cb6bb5ec313d9d2de03d286
+        
         public MainWindow()
         {
             InitializeComponent();
         }
+        
         public MainWindow(Employee employee)
         {
             InitializeComponent();
             _employee = employee;
-<<<<<<< HEAD
-            pnlEmployeeMenu.Visibility = Visibility.Visible;
+            
+            // Show management menu for employees
+            pnlManagementMenu.Visibility = Visibility.Visible;
+            pnlEmployeeMenu.Visibility = Visibility.Collapsed;
             pnlCustomerMenu.Visibility = Visibility.Collapsed;
             
-            switch(_employee.RoleNum)
-=======
             switch (_employee.RoleNum)
->>>>>>> f5ccb8dae706c2f16cb6bb5ec313d9d2de03d286
             {
                 case 1:
                     // Admin role
                     lblRole.Content = "Admin Dashboard";
+                    lblRoleLegacy.Content = "Admin Dashboard";
                     lbl_NameGreeting.Content = "Hello, " + _employee.Name;
                     break;
                 case 3:
                     // Staff role
                     lblRole.Content = "Staff Dashboard";
+                    lblRoleLegacy.Content = "Staff Dashboard";
+                    lbl_NameGreeting.Content = "Hello, " + _employee.Name;
                     break;
                 default:
                     lblRole.Content = "Unknown Role";
+                    lblRoleLegacy.Content = "Unknown Role";
                     break;
             }
             lblUserInfo.Content = $"Welcome, {_employee.Name}";
         }
+        
         public MainWindow(Customer customer)
         {
             InitializeComponent();
@@ -82,6 +84,7 @@ namespace StoreManager
             // Show customer menu
             pnlCustomerMenu.Visibility = Visibility.Visible;
             pnlEmployeeMenu.Visibility = Visibility.Collapsed;
+            pnlManagementMenu.Visibility = Visibility.Collapsed;
             
             // Subscribe to cart changes
             ShoppingCartService.Instance.CartChanged += OnCartChanged;
@@ -97,8 +100,8 @@ namespace StoreManager
             loginWindow.Show();
             this.Close();
         }
-<<<<<<< HEAD
 
+        // Customer menu handlers
         private void btnViewProducts_Click(object sender, RoutedEventArgs e)
         {
             if (_customer != null)
@@ -158,7 +161,9 @@ namespace StoreManager
                 ShoppingCartService.Instance.CartChanged -= OnCartChanged;
             }
             base.OnClosed(e);
-=======
+        }
+
+        // Management functions for employees
         public void LoadCustomerData()
         {
             _customerManagementService = new CustomerManagementService();
@@ -189,6 +194,7 @@ namespace StoreManager
             _orderDetailsService = new OrderDetailsService();
             dgOrderDetail.ItemsSource = _orderDetailsService.GetAllOrderDetails().ToList();
         }
+        
         private void btn_Create_Click(object sender, RoutedEventArgs e)
         {
             if (_currentMode == ManageMode.Customer)
@@ -485,7 +491,7 @@ namespace StoreManager
             LoadOrderData();
             dgOrderDetail.ItemsSource = null;
         }
-        //AI helps because I haven't studied about DataGrid SelectionChanged event before
+        
         private void dgOrder_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var selectedOrder = dgOrder.SelectedItem as Order;
@@ -494,7 +500,6 @@ namespace StoreManager
                 _orderDetailsService = new OrderDetailsService();
                 dgOrderDetail.ItemsSource = _orderDetailsService.GetOrderDetailsByOrderId(selectedOrder.OrderId);
             }
->>>>>>> f5ccb8dae706c2f16cb6bb5ec313d9d2de03d286
         }
     }
 }

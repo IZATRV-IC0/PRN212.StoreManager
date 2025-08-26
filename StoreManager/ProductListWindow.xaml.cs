@@ -129,20 +129,4 @@ namespace StoreManager
             this.Close();
         }
     }
-
-    // Converter for boolean to text (for Status column)
-    public class InverseBooleanToTextConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (value is bool discontinued)
-                return discontinued ? "Discontinued" : "Available";
-            return "Unknown";
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
 }
