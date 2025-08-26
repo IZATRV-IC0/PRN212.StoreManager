@@ -64,5 +64,14 @@ namespace StoreManagement.DAL.Repositories
                 _context.SaveChanges();
             }
         }
+        public List<OrderDetail> GetOrderDetailsByEmployeeId(int employeeId)
+        {
+            return _context.OrderDetails
+                .Include(od => od.Order)
+                .Include(od => od.Product)
+                .Where(od => od.Order.EmployeeId == employeeId)
+                .ToList();
+        }
+
     }
 }

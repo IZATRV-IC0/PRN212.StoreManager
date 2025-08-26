@@ -54,5 +54,14 @@ namespace StoreManagement.BLL.Services
             }
             _orderRepository.Delete(orderId);
         }
+        public List<StoreManagement.DAL.Entities.Order> GetOrdersByEmployee(int employeeId)
+        {
+            if (employeeId <= 0)
+            {
+                throw new ArgumentException("Invalid Employee ID", nameof(employeeId));
+            }
+            return _orderRepository.GetOrdersByEmployeeId(employeeId);
+        }
+
     }
 }
