@@ -225,7 +225,7 @@
                            Foreground="#666"/>
 
                 <!-- Username Label -->
-                <TextBlock Grid.Row="4" Text="Username" 
+                <TextBlock Grid.Row="4" Text="Username / ContactName(Customer)" 
                            FontSize="16" FontWeight="Medium" 
                            Foreground="#555" Margin="5,0,0,0"/>
 
@@ -235,7 +235,7 @@
                          FontFamily="Segoe UI"/>
 
                 <!-- Password Label -->
-                <TextBlock Grid.Row="8" Text="Password" 
+                <TextBlock Grid.Row="8" Text="Password / Phone(Customer)" 
                            FontSize="16" FontWeight="Medium" 
                            Foreground="#555" Margin="5,0,0,0"/>
 

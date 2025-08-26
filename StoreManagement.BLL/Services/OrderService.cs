@@ -1,4 +1,5 @@
 ﻿using StoreManagement.DAL.Repositories;
+using StoreManagement.DAL.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,8 @@ namespace StoreManagement.BLL.Services
 {
     public class OrderService
     {
+        // Static event to notify when a new order is created
+        public static event EventHandler<OrderCreatedEventArgs>? OrderCreated;
         OrderRepository _orderRepository;
         public OrderService()
         {
@@ -54,5 +57,32 @@ namespace StoreManagement.BLL.Services
             }
             _orderRepository.Delete(orderId);
         }
+        
+        public List<StoreManagement.DAL.Entities.Order> GetOrdersByCustomerId(int customerId)
+        {
+            if (customerId <= 0)
+            {
+                throw new ArgumentException("Invalid customer ID", nameof(customerId));
+            }
+            return _orderRepository.GetOrdersByCustomerId(customerId);
+        }
+        
+        public void AddOrder(StoreManagement.DAL.Entities.Order order)
+        {
+            if (order == null)
+            {
+                throw new ArgumentNullException(nameof(order), "Order cannot be null");
+            }
+            _orderRepository.Add(order);
+            
+            // Trigger the OrderCreated event
+            OrderCreated?.Invoke(this, new OrderCreatedEventArgs { Order = order });
+        }
+    }
+    
+    // Event arguments class for OrderCreated event
+    public class OrderCreatedEventArgs : EventArgs
+    {
+        public Order Order { get; set; } = null!;
     }
 }

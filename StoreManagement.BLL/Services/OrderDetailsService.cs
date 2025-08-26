@@ -46,5 +46,10 @@ namespace StoreManagement.BLL.Services
             }
             _orderDetailsRepository.Delete(orderId, productId);
         }
+        
+        public List<StoreManagement.DAL.Entities.OrderDetail> GetOrderDetailsByOrderId(int orderId)
+        {
+            return SearchOrderDetailsByOrderId(orderId);
+        }
     }
 }
