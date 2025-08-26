@@ -100,13 +100,54 @@ namespace StoreManagement.DAL.Repositories
                 _context.SaveChanges();
             }
         }
+
+        
+        public List<Order> GetOrdersByCustomerId(int customerId)
+        {
+            return _context.Orders
+                .Include(o => o.Customer)
+                .Include(o => o.Employee)
+                .Include(o => o.OrderDetails)
+                .ThenInclude(od => od.Product)
+                .Where(o => o.CustomerId == customerId)
+                .OrderByDescending(o => o.OrderDate)
+                .ToList();
+        }
+
         public List<Order> GetOrdersByEmployeeId(int employeeId)
         {
             return _context.Orders
                 .Include(o => o.Customer)
                 .Include(o => o.Employee)
+                .Include(o => o.OrderDetails)
+                .ThenInclude(od => od.Product)
                 .Where(o => o.EmployeeId == employeeId)
+                .OrderByDescending(o => o.OrderDate)
                 .ToList();
+        }
+        
+        public void Add(Order order)
+        {
+            try
+            {
+                // Ensure OrderId is 0 for new orders (will be auto-generated)
+                order.OrderId = 0;
+                
+                // Ensure all OrderDetails have OrderId = 0 (will be set automatically)
+                foreach (var detail in order.OrderDetails)
+                {
+                    detail.OrderId = 0;
+                }
+
+                // Add the order with all its details in one transaction
+                _context.Orders.Add(order);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                // Log the actual error for debugging
+                throw new InvalidOperationException($"Failed to save order: {ex.Message}", ex);
+            }
         }
 
     }

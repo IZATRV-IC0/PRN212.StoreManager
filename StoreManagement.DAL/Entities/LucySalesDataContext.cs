@@ -91,7 +91,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         modelBuilder.Entity<Order>(entity =>
         {
             entity.Property(e => e.OrderId)
-                .ValueGeneratedNever()
+                .ValueGeneratedOnAdd()
                 .HasColumnName("OrderID");
             entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
             entity.Property(e => e.EmployeeId).HasColumnName("EmployeeID");

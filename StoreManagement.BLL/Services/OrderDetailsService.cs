@@ -55,6 +55,7 @@ namespace StoreManagement.BLL.Services
             }
             _orderDetailsRepository.Delete(orderId, productId);
         }
+        
         public List<StoreManagement.DAL.Entities.OrderDetail> GetOrderDetailsByEmployee(int employeeId)
         {
             if (employeeId <= 0)
@@ -63,6 +64,5 @@ namespace StoreManagement.BLL.Services
             }
             return _orderDetailsRepository.GetOrderDetailsByEmployeeId(employeeId);
         }
-
     }
 }

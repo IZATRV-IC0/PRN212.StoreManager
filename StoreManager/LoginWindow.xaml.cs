@@ -21,8 +21,8 @@ namespace StoreManager
     /// </summary>
     public partial class LoginWindow : Window
     {
-        EmployeeManagementService _employeeService;
-        CustomerManagementService _customerService;
+        EmployeeManagementService? _employeeService;
+        CustomerManagementService? _customerService;
         public LoginWindow()
         {
             InitializeComponent();

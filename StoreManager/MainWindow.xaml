@@ -5,84 +5,209 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StoreManager"
         mc:Ignorable="d"
-        Title="Management Window" Height="835" Width="1193" ResizeMode="NoResize">
-    <Grid Margin="0,0,-22,0">
-        <Label x:Name="lblRole" Content="Role" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="40" Height="66"/>
-        <Button x:Name="btn_Logout" Content="Logout" HorizontalAlignment="Left" Margin="1001,720,0,0" VerticalAlignment="Top" Width="101" Click="btn_Logout_Click" Height="47"/>
-        
-        <DataGrid x:Name="dgCustomer" Margin="273,95,22,365" AutoGenerateColumns="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding CustomerId}" Width="*"/>
-                <DataGridTextColumn Header="Company Name" Binding="{Binding CompanyName}" Width="*"/>
-                <DataGridTextColumn Header="Contact Name" Binding="{Binding ContactName}" Width="*"/>
-                <DataGridTextColumn Header="Contact Title" Binding="{Binding ContactTitle}" Width="*"/>
-                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="*"/>
-                <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="*"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <Menu Margin="0,0,959,0" Background="DarkViolet"/>
-        <Button x:Name="btn_Create" Content="Create" HorizontalAlignment="Left" Margin="459,720,0,0" Width="101" VerticalAlignment="Top" Click="btn_Create_Click" Height="47"/>
-        <Button x:Name="btn_Update" Content="Update" HorizontalAlignment="Left" Margin="642,720,0,0" Width="102" VerticalAlignment="Top" Click="btn_Update_Click" Height="47"/>
-        <Button x:Name="btn_Delete" Content="Delete" HorizontalAlignment="Left" Margin="833,720,0,0" Width="101" VerticalAlignment="Top" Click="btn_Delete_Click" Height="47"/>
-        <Button x:Name="btn_CustomerMenu" Content="Managing Customer" HorizontalAlignment="Left" Margin="0,56,0,0" VerticalAlignment="Top" Width="240" Click="btn_CustomerMenu_Click"/>
-        <Label x:Name="lbl_NameGreeting" Content="Member!" FontSize="15" HorizontalAlignment="Left" VerticalAlignment="Top" Width="224" Height="38" Margin="10,0,0,0"/>
-        <Button x:Name="btn_EmployeeMenu" Content="Managing Employee" HorizontalAlignment="Left" Margin="0,98,0,0" VerticalAlignment="Top" Width="240" Click="btn_EmployeeMenu_Click"/>
-        <DataGrid x:Name="dgEmployee" Margin="261,90,38,370" AutoGenerateColumns="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding EmployeeId}" Width="*"/>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
-                <DataGridTextColumn Header="User Name" Binding="{Binding UserName}" Width="*"/>
-                <DataGridTextColumn Header="Job Title" Binding="{Binding JobTitle}" Width="*"/>
-                <DataGridTextColumn Header="Birth Date" Binding="{Binding BirthDate}" Width="*"/>
-                <DataGridTextColumn Header="Hire Date" Binding="{Binding HireDate}" Width="*"/>
-                <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="*"/>
-                <DataGridTextColumn Header="Role" Binding="{Binding RoleNum}" Width="*"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <Button x:Name="btn_Product" Content="Managing Product" HorizontalAlignment="Left" Margin="0,147,0,0" VerticalAlignment="Top" Width="240" Click="btn_Product_Click"/>
-        <DataGrid x:Name="dgProduct" Margin="261,90,22,370" AutoGenerateColumns="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding ProductId}" Width="*"/>
-                <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" Width="150"/>
-                <DataGridTextColumn Header="Supplier ID" Binding="{Binding SupplierId}" Width="*"/>
-                <DataGridTextColumn Header="Quantity/Unit" Binding="{Binding QuantityPerUnit}" Width="*"/>
-                <DataGridTextColumn Header="Price" Binding="{Binding UnitPrice}" Width="*"/>
-                <DataGridTextColumn Header="Units" Binding="{Binding UnitsInStock}" Width="*"/>
-                <DataGridTextColumn Header="Unit Orders" Binding="{Binding UnitsOnOrder}" Width="*"/>
-                <DataGridTextColumn Header="Reorder Level" Binding="{Binding ReorderLevel}" Width="*"/>
-                <DataGridCheckBoxColumn Header="Discontinued" Binding="{Binding Discontinued}" Width="*"/>
-                <DataGridTextColumn Header="Category Name" Binding="{Binding Category.CategoryName}" Width="150"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <Button x:Name="btn_Category" Content="Managing Category" HorizontalAlignment="Left" Margin="0,196,0,0" VerticalAlignment="Top" Width="240" Click="btn_Category_Click"/>
-        <DataGrid x:Name="dgCategory" Margin="261,90,22,370" AutoGenerateColumns="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding CategoryId}" Width="*"/>
-                <DataGridTextColumn Header="Category Name" Binding="{Binding CategoryName}" Width="*"/>
-                <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <Button x:Name="btn_OrderManager" Content="Managing Order" HorizontalAlignment="Left" VerticalAlignment="Top" Width="240" Click="btn_OrderManager_Click" Margin="0,245,0,0"/>
-        <DataGrid x:Name="dgOrder" Margin="261,90,38,370" AutoGenerateColumns="False" SelectionChanged="dgOrder_SelectionChanged">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="ID" Binding="{Binding OrderId}" Width="*"/>
-                <DataGridTextColumn Header="Customer Id" Binding="{Binding CustomerId}" Width="*"/>
-                <DataGridTextColumn Header="Customer Name" Binding="{Binding Customer.ContactName}" Width="*"/>
-                <DataGridTextColumn Header="Employee Id" Binding="{Binding EmployeeId}" Width="*"/>
-                <DataGridTextColumn Header="Employee Name" Binding="{Binding Employee.Name}" Width="*"/>
-                <DataGridTextColumn Header="Order Date" Binding="{Binding OrderDate}" Width="*"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <DataGrid x:Name="dgOrderDetail" Margin="280,462,41,196" AutoGenerateColumns="False">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Order ID" Binding="{Binding OrderId}" Width="*"/>
-                <DataGridTextColumn Header="Product ID" Binding="{Binding ProductId}" Width="*"/>
-                <DataGridTextColumn Header="Product Name" Binding="{Binding Product.ProductName}" Width="*"/>
-                <DataGridTextColumn Header="Price" Binding="{Binding UnitPrice}" Width="*"/>
-                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="*"/>
-                <DataGridTextColumn Header="Discount" Binding="{Binding Discount}" Width="*"/>
-            </DataGrid.Columns>
-        </DataGrid>
 
+        Title="Store Manager Dashboard" Height="600" Width="1000" 
+        WindowStartupLocation="CenterScreen">
+    
+    <Window.Resources>
+        <!-- Button Style -->
+        <Style x:Key="MenuButtonStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Margin" Value="10,5"/>
+            <Setter Property="Background" Value="#4A90E2"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#357ABD"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#2C3E50">
+            <Grid>
+                <Label x:Name="lblRole" Content="Role" 
+                       HorizontalAlignment="Center" VerticalAlignment="Center" 
+                       FontSize="32" FontWeight="Bold" Foreground="White"/>
+                <Label x:Name="lblUserInfo" Content="" 
+                       HorizontalAlignment="Right" VerticalAlignment="Center" 
+                       FontSize="14" Foreground="White" Margin="0,0,20,0"/>
+            </Grid>
+        </Border>
+        
+        <!-- Main Content -->
+        <Grid Grid.Row="1" Margin="20">
+            <!-- Employee Menu -->
+            <StackPanel x:Name="pnlEmployeeMenu" Visibility="Collapsed">
+                <TextBlock Text="Employee Functions" FontSize="20" FontWeight="Bold" 
+                           Margin="0,0,0,20" HorizontalAlignment="Center"/>
+                <!-- Employee menu items will be added here based on role -->
+            </StackPanel>
+            
+            <!-- Customer Menu -->
+            <StackPanel x:Name="pnlCustomerMenu" Visibility="Collapsed">
+                <TextBlock Text="Customer Dashboard" FontSize="24" FontWeight="Bold" 
+                           Margin="0,0,0,30" HorizontalAlignment="Center"/>
+                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <StackPanel Grid.Column="0" Margin="20,0">
+                        <Button Name="btnViewProducts" Content="🛒 View Products" 
+                                Style="{StaticResource MenuButtonStyle}"
+                                Height="80" FontSize="18"
+                                Click="btnViewProducts_Click"/>
+                        
+                        <Button Name="btnPlaceOrder" Content="📦 Place Order (0)" 
+                                Style="{StaticResource MenuButtonStyle}"
+                                Height="80" FontSize="18"
+                                Background="#5CB85C"
+                                Click="btnPlaceOrder_Click"/>
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Column="1" Margin="20,0">
+                        <Button Name="btnOrderHistory" Content="📋 Order History" 
+                                Style="{StaticResource MenuButtonStyle}"
+                                Height="80" FontSize="18"
+                                Background="#F0AD4E"
+                                Click="btnOrderHistory_Click"/>
+                        
+                        <Button Name="btnMyProfile" Content="👤 My Profile" 
+                                Style="{StaticResource MenuButtonStyle}"
+                                Height="80" FontSize="18"
+                                Background="#5BC0DE"
+                                Click="btnMyProfile_Click"/>
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+            
+            <!-- Legacy Management UI -->
+            <Grid x:Name="pnlManagementMenu" Visibility="Collapsed" Margin="-20">
+                <Label x:Name="lblRoleLegacy" Content="Role" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="40" Height="66"/>
+                <Button x:Name="btn_LogoutLegacy" Content="Logout" HorizontalAlignment="Left" Margin="981,700,0,0" VerticalAlignment="Top" Width="101" Click="btn_Logout_Click" Height="47"/>
+
+                <DataGrid x:Name="dgCustomer" Margin="273,95,22,365" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding CustomerId}" Width="*"/>
+                        <DataGridTextColumn Header="Company Name" Binding="{Binding CompanyName}" Width="*"/>
+                        <DataGridTextColumn Header="Contact Name" Binding="{Binding ContactName}" Width="*"/>
+                        <DataGridTextColumn Header="Contact Title" Binding="{Binding ContactTitle}" Width="*"/>
+                        <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="*"/>
+                        <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Menu Margin="0,0,959,0" Background="DarkViolet"/>
+                <Button x:Name="btn_Create" Content="Create" HorizontalAlignment="Left" Margin="459,700,0,0" Width="101" VerticalAlignment="Top" Click="btn_Create_Click" Height="47"/>
+                <Button x:Name="btn_Update" Content="Update" HorizontalAlignment="Left" Margin="642,700,0,0" Width="102" VerticalAlignment="Top" Click="btn_Update_Click" Height="47"/>
+                <Button x:Name="btn_Delete" Content="Delete" HorizontalAlignment="Left" Margin="833,700,0,0" Width="101" VerticalAlignment="Top" Click="btn_Delete_Click" Height="47"/>
+                <Button x:Name="btn_CustomerMenu" Content="Managing Customer" HorizontalAlignment="Left" Margin="0,56,0,0" VerticalAlignment="Top" Width="240" Click="btn_CustomerMenu_Click"/>
+                <Label x:Name="lbl_NameGreeting" Content="Member!" FontSize="15" HorizontalAlignment="Left" VerticalAlignment="Top" Width="224" Height="38" Margin="10,0,0,0"/>
+                <Button x:Name="btn_EmployeeMenu" Content="Managing Employee" HorizontalAlignment="Left" Margin="0,98,0,0" VerticalAlignment="Top" Width="240" Click="btn_EmployeeMenu_Click"/>
+                <DataGrid x:Name="dgEmployee" Margin="261,90,38,370" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding EmployeeId}" Width="*"/>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                        <DataGridTextColumn Header="User Name" Binding="{Binding UserName}" Width="*"/>
+                        <DataGridTextColumn Header="Job Title" Binding="{Binding JobTitle}" Width="*"/>
+                        <DataGridTextColumn Header="Birth Date" Binding="{Binding BirthDate}" Width="*"/>
+                        <DataGridTextColumn Header="Hire Date" Binding="{Binding HireDate}" Width="*"/>
+                        <DataGridTextColumn Header="Address" Binding="{Binding Address}" Width="*"/>
+                        <DataGridTextColumn Header="Role" Binding="{Binding RoleNum}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Button x:Name="btn_Product" Content="Managing Product" HorizontalAlignment="Left" Margin="0,147,0,0" VerticalAlignment="Top" Width="240" Click="btn_Product_Click"/>
+                <DataGrid x:Name="dgProduct" Margin="261,90,22,370" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding ProductId}" Width="*"/>
+                        <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" Width="150"/>
+                        <DataGridTextColumn Header="Supplier ID" Binding="{Binding SupplierId}" Width="*"/>
+                        <DataGridTextColumn Header="Quantity/Unit" Binding="{Binding QuantityPerUnit}" Width="*"/>
+                        <DataGridTextColumn Header="Price" Binding="{Binding UnitPrice}" Width="*"/>
+                        <DataGridTextColumn Header="Units" Binding="{Binding UnitsInStock}" Width="*"/>
+                        <DataGridTextColumn Header="Unit Orders" Binding="{Binding UnitsOnOrder}" Width="*"/>
+                        <DataGridTextColumn Header="Reorder Level" Binding="{Binding ReorderLevel}" Width="*"/>
+                        <DataGridCheckBoxColumn Header="Discontinued" Binding="{Binding Discontinued}" Width="*"/>
+                        <DataGridTextColumn Header="Category Name" Binding="{Binding Category.CategoryName}" Width="150"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Button x:Name="btn_Category" Content="Managing Category" HorizontalAlignment="Left" Margin="0,196,0,0" VerticalAlignment="Top" Width="240" Click="btn_Category_Click"/>
+                <DataGrid x:Name="dgCategory" Margin="261,90,22,370" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding CategoryId}" Width="*"/>
+                        <DataGridTextColumn Header="Category Name" Binding="{Binding CategoryName}" Width="*"/>
+                        <DataGridTextColumn Header="Description" Binding="{Binding Description}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Button x:Name="btn_OrderManager" Content="Managing Order" HorizontalAlignment="Left" VerticalAlignment="Top" Width="240" Click="btn_OrderManager_Click" Margin="0,245,0,0"/>
+                <DataGrid x:Name="dgOrder" Margin="261,90,38,370" AutoGenerateColumns="False" SelectionChanged="dgOrder_SelectionChanged">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Binding="{Binding OrderId}" Width="*"/>
+                        <DataGridTextColumn Header="Customer Id" Binding="{Binding CustomerId}" Width="*"/>
+                        <DataGridTextColumn Header="Customer Name" Binding="{Binding Customer.ContactName}" Width="*"/>
+                        <DataGridTextColumn Header="Employee Id" Binding="{Binding EmployeeId}" Width="*"/>
+                        <DataGridTextColumn Header="Employee Name" Binding="{Binding Employee.Name}" Width="*"/>
+                        <DataGridTextColumn Header="Order Date" Binding="{Binding OrderDate}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <DataGrid x:Name="dgOrderDetail" Margin="280,462,41,176" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Order ID" Binding="{Binding OrderId}" Width="*"/>
+                        <DataGridTextColumn Header="Product ID" Binding="{Binding ProductId}" Width="*"/>
+                        <DataGridTextColumn Header="Product Name" Binding="{Binding Product.ProductName}" Width="*"/>
+                        <DataGridTextColumn Header="Price" Binding="{Binding UnitPrice}" Width="*"/>
+                        <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="*"/>
+                        <DataGridTextColumn Header="Discount" Binding="{Binding Discount}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+        
+        <!-- Footer -->
+        <Border Grid.Row="2" Background="#ECF0F1">
+            <Grid>
+                <Button x:Name="btn_Logout" Content="🚪 Logout" 
+                        HorizontalAlignment="Right" Margin="0,0,20,0" 
+                        VerticalAlignment="Center" Width="120" Height="40"
+                        Background="#E74C3C" Foreground="White"
+                        FontWeight="Bold" BorderThickness="0"
+                        Cursor="Hand" Click="btn_Logout_Click">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" 
+                                    CornerRadius="5">
+                                <ContentPresenter HorizontalAlignment="Center" 
+                                                  VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+        </Border>
     </Grid>
 </Window>
