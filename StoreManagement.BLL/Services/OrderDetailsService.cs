@@ -1,4 +1,5 @@
-﻿using StoreManagement.DAL.Repositories;
+﻿using StoreManagement.DAL.Entities;
+using StoreManagement.DAL.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,14 @@ namespace StoreManagement.BLL.Services
                 throw new InvalidOperationException("OrderDetails repository is not initialized or whether the database is not connected.");
             }
             return _orderDetailsRepository.GetAll();
+        }
+        public List<OrderDetail> GetOrderDetailsByOrderId(int orderId)
+        {
+            if (orderId < 0)
+            {
+                throw new ArgumentException("Order ID cannot be negative", nameof(orderId));
+            }
+            return _orderDetailsRepository.GetOrderDetailsByOrderId(orderId);
         }
         public List<StoreManagement.DAL.Entities.OrderDetail> SearchOrderDetailsByOrderId(int orderId)
         {

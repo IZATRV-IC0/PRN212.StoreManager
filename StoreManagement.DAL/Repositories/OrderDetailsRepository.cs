@@ -24,6 +24,14 @@ namespace StoreManagement.DAL.Repositories
         {
             return _context.OrderDetails.Include(o => o.Order).Include(o => o.Product).ToList();
         }
+        public List<OrderDetail> GetOrderDetailsByOrderId(int orderId)
+        {
+            return _context.OrderDetails
+                           .Include(od => od.Product)
+                           .Where(od => od.OrderId == orderId)
+                           .ToList();
+        }
+
         public List<OrderDetail> Search(int OrderId)
         {
             List<OrderDetail> orderDetails = new List<OrderDetail>();

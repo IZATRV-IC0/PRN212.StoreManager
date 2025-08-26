@@ -23,7 +23,8 @@ namespace StoreManager
             Customer,
             Employee,
             Product,
-            Category
+            Category,
+            Order
         }
         private ManageMode _currentMode;
         Employee _employee;
@@ -32,6 +33,8 @@ namespace StoreManager
         EmployeeManagementService _employeeManagementService;
         ProductService _productService;
         CategoryService _categoryService;
+        OrderService _orderService;
+        OrderDetailsService _orderDetailsService;
         public MainWindow()
         {
             InitializeComponent();
@@ -46,10 +49,6 @@ namespace StoreManager
                     // Admin role
                     lblRole.Content = "Admin Dashboard";
                     lbl_NameGreeting.Content = "Hello, " + _employee.Name;
-                    break;
-                case 2:
-                    // Manager role
-                    lblRole.Content = "Manager Dashboard";
                     break;
                 case 3:
                     // Staff role
@@ -93,6 +92,16 @@ namespace StoreManager
         {
             _categoryService = new CategoryService();
             dgCategory.ItemsSource = _categoryService.GetAllCategories().ToList();
+        }
+        public void LoadOrderData()
+        {
+            _orderService = new OrderService();
+            dgOrder.ItemsSource = _orderService.GetAllOrders().ToList();
+        }
+        public void LoadOrderDetailsData()
+        {
+            _orderDetailsService = new OrderDetailsService();
+            dgOrderDetail.ItemsSource = _orderDetailsService.GetAllOrderDetails().ToList();
         }
         private void btn_Create_Click(object sender, RoutedEventArgs e)
         {
@@ -198,6 +207,23 @@ namespace StoreManager
                 else
                 {
                     MessageBox.Show("Please select a category to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else if (_currentMode == ManageMode.Order)
+            {
+                Order selectedOrder = dgOrder.SelectedItem as Order;
+                if (selectedOrder != null)
+                {
+                    ManageOrderWindow updateWindow = new ManageOrderWindow();
+                    updateWindow.OrderEdit = selectedOrder;
+                    updateWindow.ShowDialog();
+
+                    LoadOrderData();
+                    dgOrderDetail.ItemsSource = null;
+                }
+                else
+                {
+                    MessageBox.Show("Please select an order to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
         }
@@ -318,6 +344,8 @@ namespace StoreManager
             dgEmployee.Visibility = Visibility.Collapsed;
             dgProduct.Visibility = Visibility.Collapsed;
             dgCategory.Visibility = Visibility.Collapsed;
+            dgOrder.Visibility = Visibility.Collapsed;
+            dgOrderDetail.Visibility = Visibility.Collapsed;
             LoadCustomerData();
         }
 
@@ -328,6 +356,8 @@ namespace StoreManager
             dgEmployee.Visibility = Visibility.Visible;
             dgProduct.Visibility = Visibility.Collapsed;
             dgCategory.Visibility = Visibility.Collapsed;
+            dgOrder.Visibility = Visibility.Collapsed;
+            dgOrderDetail.Visibility = Visibility.Collapsed;
             LoadEmployeeData();
         }
 
@@ -338,6 +368,8 @@ namespace StoreManager
             dgEmployee.Visibility = Visibility.Collapsed;
             dgProduct.Visibility = Visibility.Visible;
             dgCategory.Visibility = Visibility.Collapsed;
+            dgOrderDetail.Visibility = Visibility.Collapsed;
+            dgOrder.Visibility = Visibility.Collapsed;
             LoadProductData();
         }
 
@@ -348,7 +380,34 @@ namespace StoreManager
             dgCustomer.Visibility = Visibility.Collapsed;
             dgEmployee.Visibility = Visibility.Collapsed;
             dgProduct.Visibility = Visibility.Collapsed;
+            dgOrderDetail.Visibility = Visibility.Collapsed;
+            dgOrder.Visibility = Visibility.Collapsed;
             LoadCategoryData();
+        }
+
+        private void btn_OrderManager_Click(object sender, RoutedEventArgs e)
+        {
+            _currentMode = ManageMode.Order;
+            btn_Create.Visibility = Visibility.Collapsed;
+            btn_Delete.Visibility = Visibility.Collapsed;
+            dgOrder.Visibility = Visibility.Visible;
+            dgOrderDetail.Visibility = Visibility.Visible;
+            dgCategory.Visibility = Visibility.Collapsed;
+            dgCustomer.Visibility = Visibility.Collapsed;
+            dgEmployee.Visibility = Visibility.Collapsed;
+            dgProduct.Visibility = Visibility.Collapsed;
+            LoadOrderData();
+            dgOrderDetail.ItemsSource = null;
+        }
+        //AI helps because I haven't studied about DataGrid SelectionChanged event before
+        private void dgOrder_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var selectedOrder = dgOrder.SelectedItem as Order;
+            if (selectedOrder != null)
+            {
+                _orderDetailsService = new OrderDetailsService();
+                dgOrderDetail.ItemsSource = _orderDetailsService.GetOrderDetailsByOrderId(selectedOrder.OrderId);
+            }
         }
     }
 }
