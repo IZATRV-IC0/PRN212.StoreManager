@@ -93,6 +93,14 @@ namespace StoreManager
         #region Search Controls Management
         private void ShowSearchControls(bool showCategory = false, string searchLabel = "Search by Name:")
         {
+            if (_currentMode == ManageMode.Order)
+            {
+                pnlEmployeeNameSearchForOrder.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                pnlEmployeeNameSearchForOrder.Visibility = Visibility.Collapsed;
+            }
             SearchSection.Visibility = Visibility.Visible;
             lblSearch.Visibility = Visibility.Visible;
             txtSearchValue.Visibility = Visibility.Visible;
@@ -165,7 +173,7 @@ namespace StoreManager
             ShowOnlyDataGrid(dgOrder);
             SetButtonVisibility(false, false, true);
             OrderDetailSection.Visibility = Visibility.Visible;
-            ShowSearchControls(false, "Search by ID:");
+            ShowSearchControls(false, "& Customer Name:");
             txtSearchValue.Clear();
             LoadOrderData();
             dgOrderDetail.ItemsSource = null;
@@ -267,10 +275,11 @@ namespace StoreManager
 
         private void SearchOrders()
         {
-            var searchValue = txtSearchValue.Text;
-            if (!string.IsNullOrEmpty(searchValue))
+            var searchCustomerName = txtSearchValue.Text;
+            var searchEmployeeName = txtEmployeeNameSearchValue.Text;
+            if (!string.IsNullOrEmpty(searchCustomerName) || !string.IsNullOrEmpty(searchEmployeeName))
             {
-                dgOrder.ItemsSource = _orderService.SearchByOrderID(searchValue).ToList();
+                dgOrder.ItemsSource = _orderService.SearchOrderByEmployeeAndCustomer(searchEmployeeName, searchCustomerName).ToList();
             }
             else
             {
