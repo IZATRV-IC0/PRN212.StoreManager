@@ -25,6 +25,14 @@ namespace StoreManagement.BLL.Services
             }
             return _orderRepository.GetAll();
         }
+        public List<StoreManagement.DAL.Entities.Order> SearchByOrderID(string orderID)
+        {
+            if (_orderRepository == null)
+            {
+                throw new InvalidOperationException("Order repository is not initialized or whether the database is not connected.");
+            }
+            return _orderRepository.SearchByOrderID(orderID);
+        }
         public List<StoreManagement.DAL.Entities.Order> SearchOrderByCustomer(string customerName, int customerId)
         {
             if (customerId < 0 && string.IsNullOrEmpty(customerName))
