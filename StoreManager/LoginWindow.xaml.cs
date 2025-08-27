@@ -37,45 +37,67 @@ namespace StoreManager
                 MessageBox.Show("Please enter both username and password.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            //Employee login
-            _employeeService = new EmployeeManagementService();
-            var employee = _employeeService.Login(username, password);
-            if (employee != null)
+            
+            try
             {
-                switch (employee.RoleNum)
+                //Employee login
+                _employeeService = new EmployeeManagementService();
+                var employee = _employeeService.Login(username, password);
+                if (employee != null)
                 {
-                    case 1:
-                        //Admin role
-                        MainWindow adminDashboard = new MainWindow(employee);
-                        MessageBox.Show("Welcome, Admin!", "Login Successful", MessageBoxButton.OK, MessageBoxImage.Information);
-                        adminDashboard.Show();
-                        this.Close();
-                        break;
-                    case 2:
-                        //Manager role
-                        MainWindow managerDashboard = new MainWindow(employee);
-                        MessageBox.Show("Welcome, Manager!", "Login Successful", MessageBoxButton.OK, MessageBoxImage.Information);
-                        managerDashboard.Show();
-                        this.Close();
-                        break;
-                    case 3:
-                        //Staff role
-                        MainWindow staffDashboard = new MainWindow(employee);
-                        MessageBox.Show("Welcome, Staff!", "Login Successful", MessageBoxButton.OK, MessageBoxImage.Information);
-                        staffDashboard.Show();
-                        this.Close();
-                        break;
-                    default:
+                    try
+                    {
+                        MainWindow dashboard = null;
+                        string welcomeMessage = "";
+                        
+                        switch (employee.RoleNum)
                         {
-                            MessageBox.Show("Your role is not recognized. Please contact the administrator.", "Role Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                            break;
+                            case 1:
+                                //Admin role
+                                dashboard = new MainWindow(employee);
+                                welcomeMessage = "Welcome, Admin!";
+                                break;
+                            case 2:
+                                //Manager role
+                                dashboard = new MainWindow(employee);
+                                welcomeMessage = "Welcome, Manager!";
+                                break;
+                            case 3:
+                                //Staff role
+                                dashboard = new MainWindow(employee);
+                                welcomeMessage = "Welcome, Staff!";
+                                break;
+                            default:
+                                MessageBox.Show("Your role is not recognized. Please contact the administrator.", "Role Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                return;
                         }
+                        
+                        if (dashboard != null)
+                        {
+                            MessageBox.Show(welcomeMessage, "Login Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                            dashboard.Show();
+                            this.Close();
+                        }
+                    }
+                    catch (Exception windowEx)
+                    {
+                        MessageBox.Show($"Error opening dashboard: {windowEx.Message}", "Window Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    return;
                 }
-                return;
+                else
+                {
+                    MessageBox.Show("Invalid username or password. Please try again.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
-            else
+            catch (InvalidOperationException ex)
             {
-                MessageBox.Show("Invalid username or password. Please try again.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Database Connection Error: {ex.Message}\n\nPlease ensure:\n1. SQL Server is running\n2. Database exists\n3. Connection settings are correct", 
+                    "Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An unexpected error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -96,18 +118,38 @@ namespace StoreManager
                 MessageBox.Show("Please enter both username and password.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            //Customer login
-            _customerService = new CustomerManagementService();
-            var customer = _customerService.Login(username, password);
-            if (customer != null)
+            
+            try
             {
-                MainWindow customerWindow = new MainWindow(customer);
-                customerWindow.Show();
-                this.Close();
+                //Customer login
+                _customerService = new CustomerManagementService();
+                var customer = _customerService.Login(username, password);
+                if (customer != null)
+                {
+                    try
+                    {
+                        CustomerDashboardWindow customerWindow = new CustomerDashboardWindow(customer);
+                        customerWindow.Show();
+                        this.Close();
+                    }
+                    catch (Exception windowEx)
+                    {
+                        MessageBox.Show($"Error opening customer dashboard: {windowEx.Message}", "Window Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Invalid username or password. Please try again.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
-            else
+            catch (InvalidOperationException ex)
             {
-                MessageBox.Show("Invalid username or password. Please try again.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Database Connection Error: {ex.Message}\n\nPlease ensure:\n1. SQL Server is running\n2. Database exists\n3. Connection settings are correct", 
+                    "Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An unexpected error occurred: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

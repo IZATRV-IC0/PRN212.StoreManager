@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace StoreManagement.DAL.Entities;
 
@@ -32,13 +33,41 @@ public partial class LucySalesDataContext : DbContext
 
 protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .Build();
+        if (!optionsBuilder.IsConfigured)
+        {
+            try
+            {
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                    .Build();
 
-        var connectionString = configuration.GetConnectionString("DBDefault");
-        optionsBuilder.UseSqlServer(connectionString);
+                var connectionString = configuration.GetConnectionString("DBDefault");
+                
+                optionsBuilder.UseSqlServer(connectionString, options =>
+                {
+                    options.EnableRetryOnFailure(
+                        maxRetryCount: 5,
+                        maxRetryDelay: TimeSpan.FromSeconds(30),
+                        errorNumbersToAdd: null);
+                    options.CommandTimeout(30);
+                });
+            }
+            catch (Exception)
+            {
+                // Fallback connection string if appsettings.json is not found
+                var fallbackConnectionString = "Data Source=localhost\\SQLEXPRESS;Initial Catalog=Lucy_SalesData;User Id=adm;Password=123;TrustServerCertificate=True;ConnectRetryCount=3;ConnectRetryInterval=5;";
+                
+                optionsBuilder.UseSqlServer(fallbackConnectionString, options =>
+                {
+                    options.EnableRetryOnFailure(
+                        maxRetryCount: 5,
+                        maxRetryDelay: TimeSpan.FromSeconds(30),
+                        errorNumbersToAdd: null);
+                    options.CommandTimeout(30);
+                });
+            }
+        }
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

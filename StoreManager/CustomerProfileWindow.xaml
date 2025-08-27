@@ -9,54 +9,6 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize">
     
-    <Window.Resources>
-        <!-- Button Style -->
-        <Style x:Key="ActionButtonStyle" TargetType="Button">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="Medium"/>
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Background" Value="#4A90E2"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}" 
-                                CornerRadius="5">
-                            <ContentPresenter HorizontalAlignment="Center" 
-                                              VerticalAlignment="Center"/>
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#357ABD"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
-        
-        <!-- TextBox Style -->
-        <Style x:Key="ProfileTextBoxStyle" TargetType="TextBox">
-            <Setter Property="Height" Value="35"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="8,0"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="#DDD"/>
-        </Style>
-        
-        <!-- Label Style -->
-        <Style x:Key="FieldLabelStyle" TargetType="TextBlock">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="Medium"/>
-            <Setter Property="Margin" Value="0,0,0,5"/>
-            <Setter Property="Foreground" Value="#333"/>
-        </Style>
-    </Window.Resources>
-    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"/>
@@ -65,14 +17,8 @@
         </Grid.RowDefinitions>
         
         <!-- Header -->
-        <Border Grid.Row="0" Background="#2C3E50">
-            <Grid>
-                <TextBlock Text="👤 My Profile" 
-                           FontSize="28" FontWeight="Bold" 
-                           Foreground="White"
-                           HorizontalAlignment="Center" 
-                           VerticalAlignment="Center"/>
-            </Grid>
+        <Border Grid.Row="0" Style="{StaticResource HeaderBorderStyle}">
+            <TextBlock Text="👤 My Profile" Style="{StaticResource HeaderStyle}"/>
         </Border>
         
         <!-- Profile Form -->
@@ -94,68 +40,52 @@
                 </Grid.RowDefinitions>
                 
                 <!-- Customer ID (Read-only) -->
-                <TextBlock Grid.Row="0" Text="Customer ID" Style="{StaticResource FieldLabelStyle}"/>
+                <TextBlock Grid.Row="0" Text="Customer ID" Style="{StaticResource CommonLabelStyle}"/>
                 <TextBox Grid.Row="1" x:Name="txtCustomerId" 
-                         Style="{StaticResource ProfileTextBoxStyle}"
-                         IsReadOnly="True" Background="#F5F5F5"
-                         Margin="0,0,0,15"/>
+                         Style="{StaticResource CommonTextBoxStyle}"
+                         IsReadOnly="True" Background="{StaticResource LightGrayBrush}"/>
                 
                 <!-- Company Name -->
-                <TextBlock Grid.Row="2" Text="Company Name" Style="{StaticResource FieldLabelStyle}"/>
+                <TextBlock Grid.Row="2" Text="Company Name" Style="{StaticResource CommonLabelStyle}" Margin="0,20,0,0"/>
                 <TextBox Grid.Row="3" x:Name="txtCompanyName" 
-                         Style="{StaticResource ProfileTextBoxStyle}"
-                         Margin="0,0,0,15"/>
+                         Style="{StaticResource CommonTextBoxStyle}"/>
                 
                 <!-- Contact Name -->
-                <TextBlock Grid.Row="4" Text="Contact Name (Username)" Style="{StaticResource FieldLabelStyle}"/>
+                <TextBlock Grid.Row="4" Text="Contact Name" Style="{StaticResource CommonLabelStyle}" Margin="0,20,0,0"/>
                 <TextBox Grid.Row="5" x:Name="txtContactName" 
-                         Style="{StaticResource ProfileTextBoxStyle}"
-                         Margin="0,0,0,15"/>
+                         Style="{StaticResource CommonTextBoxStyle}"/>
                 
                 <!-- Contact Title -->
-                <TextBlock Grid.Row="6" Text="Contact Title" Style="{StaticResource FieldLabelStyle}"/>
+                <TextBlock Grid.Row="6" Text="Contact Title" Style="{StaticResource CommonLabelStyle}" Margin="0,20,0,0"/>
                 <TextBox Grid.Row="7" x:Name="txtContactTitle" 
-                         Style="{StaticResource ProfileTextBoxStyle}"
-                         Margin="0,0,0,15"/>
+                         Style="{StaticResource CommonTextBoxStyle}"/>
                 
                 <!-- Address -->
-                <TextBlock Grid.Row="8" Text="Address" Style="{StaticResource FieldLabelStyle}"/>
+                <TextBlock Grid.Row="8" Text="Address" Style="{StaticResource CommonLabelStyle}" Margin="0,20,0,0"/>
                 <TextBox Grid.Row="9" x:Name="txtAddress" 
-                         Style="{StaticResource ProfileTextBoxStyle}"
-                         Margin="0,0,0,15"/>
+                         Style="{StaticResource CommonTextBoxStyle}"/>
                 
-                <!-- Phone (Password) -->
-                <TextBlock Grid.Row="10" Text="Phone (Password)" Style="{StaticResource FieldLabelStyle}"/>
-                <PasswordBox Grid.Row="11" x:Name="txtPhone" 
-                             Height="35" FontSize="14"
-                             Padding="8,0"
-                             VerticalContentAlignment="Center"
-                             BorderThickness="1"
-                             BorderBrush="#DDD"
-                             Margin="0,0,0,15"/>
+                <!-- Phone -->
+                <TextBlock Grid.Row="10" Text="Phone" Style="{StaticResource CommonLabelStyle}" Margin="0,20,0,0"/>
+                <TextBox Grid.Row="11" x:Name="txtPhone" 
+                         Style="{StaticResource CommonTextBoxStyle}"/>
             </Grid>
         </ScrollViewer>
         
-        <!-- Footer Buttons -->
-        <Border Grid.Row="2" Background="#ECF0F1">
-            <Grid>
-                <StackPanel Orientation="Horizontal" 
-                            HorizontalAlignment="Center" 
-                            VerticalAlignment="Center">
-                    <Button x:Name="btnSave" Content="💾 Save Changes" 
-                            Style="{StaticResource ActionButtonStyle}"
-                            Background="#5CB85C"
-                            Width="130"
-                            Click="btnSave_Click"/>
-                    
-                    <Button x:Name="btnCancel" Content="Cancel" 
-                            Style="{StaticResource ActionButtonStyle}"
-                            Background="#95A5A6"
-                            Width="100"
-                            Margin="10,0,0,0"
-                            Click="btnCancel_Click"/>
-                </StackPanel>
-            </Grid>
-        </Border>
+        <!-- Action Buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" 
+                    HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button x:Name="btnSave" Content="💾 Save Changes" 
+                    Style="{StaticResource SuccessButtonStyle}"
+                    Width="150" Click="btnSave_Click"/>
+            
+            <Button x:Name="btnCancel" Content="❌ Cancel" 
+                    Style="{StaticResource CommonButtonStyle}"
+                    Width="150" Margin="20,0,0,0" Click="btnCancel_Click"/>
+            
+            <Button x:Name="btnBack" Content="⬅️ Back to Main" 
+                    Style="{StaticResource CommonButtonStyle}"
+                    Width="150" Margin="20,0,0,0" Click="btnBack_Click"/>
+        </StackPanel>
     </Grid>
 </Window>
