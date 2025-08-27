@@ -17,6 +17,17 @@ namespace StoreManager
         public ManageEmployeeWindow()
         {
             InitializeComponent();
+            ImplementWPFValidation();
+        }
+        private void ImplementWPFValidation()
+        {
+            //Date picker validation (age limit, default start date, no future date, default selected value)
+            dpBirthDate.DisplayDateStart = new DateTime(1900, 1, 1);
+            dpBirthDate.SelectedDate = DateTime.Today.AddYears(-16);
+            dpBirthDate.DisplayDateEnd = DateTime.Today.AddYears(-16);
+            dpHireDate.DisplayDateStart = new DateTime(1900, 1, 1);
+            dpHireDate.SelectedDate = DateTime.Today;
+            dpHireDate.DisplayDateEnd = DateTime.Today;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
