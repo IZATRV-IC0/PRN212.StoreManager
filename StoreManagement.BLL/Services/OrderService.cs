@@ -49,6 +49,14 @@ namespace StoreManagement.BLL.Services
             }
             return _orderRepository.SearchOrderByEmployee(employeeName, employeeId);
         }
+        public List<StoreManagement.DAL.Entities.Order> SearchOrderByEmployeeAndCustomer(string employeeName, string customerName)
+        {
+            if (string.IsNullOrEmpty(customerName) && string.IsNullOrEmpty(employeeName))
+            {
+                throw new ArgumentException("Unidentified search criteria", nameof(customerName));
+            }
+            return _orderRepository.SearchOrderByEmployeeAndCustomer(employeeName, customerName);
+        }
         public void UpdateOrder(StoreManagement.DAL.Entities.Order order)
         {
             if (order == null)

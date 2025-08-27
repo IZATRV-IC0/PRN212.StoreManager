@@ -373,6 +373,21 @@
                               Visibility="Collapsed"/>
 
                     <!-- Search Label and TextBox -->
+                    
+                    <!-- Search by employee name for Order-->
+                    <StackPanel x:Name="pnlEmployeeNameSearchForOrder" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="Collapsed">
+                        <TextBlock x:Name="lblEmployeeName" Text="Search by Employee Name:" 
+                                   FontSize="14" FontWeight="SemiBold" 
+                                   Foreground="#555" VerticalAlignment="Center" 
+                                   Margin="0,0,10,0"/>
+
+                        <TextBox x:Name="txtEmployeeNameSearchValue" 
+                                 Style="{StaticResource ModernTextBoxStyle}"
+                                 Width="200" Height="60" 
+                                 Margin="0,0,10,0"
+                                 />
+                    </StackPanel>
+
                     <TextBlock x:Name="lblSearch" Text="Search by Name:" 
                                FontSize="14" FontWeight="SemiBold" 
                                Foreground="#555" VerticalAlignment="Center" 

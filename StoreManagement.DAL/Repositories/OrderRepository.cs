@@ -86,6 +86,34 @@ namespace StoreManagement.DAL.Repositories
             }
             return orders;
         }
+        public List<Order> SearchOrderByEmployeeAndCustomer(string employeeName, string customerName)
+        {
+            List<Order> orders = new List<Order>();
+            //Employee Name only (not UserName, but Name)
+            if (!string.IsNullOrEmpty(employeeName) && string.IsNullOrEmpty(customerName))
+            {
+                orders = _context.Orders.Include(o => o.Customer)
+                    .Include(o => o.Employee)
+                    .Where(o => o.Employee.Name.ToLower().Contains(employeeName.ToLower())).ToList();
+            }
+            //Customer Name only
+            else if (string.IsNullOrEmpty(employeeName) && !string.IsNullOrEmpty(customerName))
+            {
+                orders = _context.Orders.Include(o => o.Customer)
+                    .Include(o => o.Employee)
+                    .Where(o => o.Customer.ContactName.ToLower().Contains(customerName.ToLower())).ToList();
+            }
+            //Employee Name and Customer Name
+            else if (!string.IsNullOrEmpty(employeeName) && !string.IsNullOrEmpty(customerName))
+            {
+                orders = _context.Orders
+                    .Include(o => o.Customer)
+                    .Include(o => o.Employee)
+                    .Where(o => o.Employee.Name.ToLower().Contains(employeeName.ToLower())
+                    && o.Customer.ContactName.ToLower().Contains(customerName.ToLower())).ToList();
+            }
+            return orders;
+        }
         public void Update(Order order)
         {
             var existingOrder = _context.Orders.Find(order.OrderId);
