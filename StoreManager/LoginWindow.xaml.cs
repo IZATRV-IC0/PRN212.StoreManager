@@ -94,7 +94,7 @@ namespace StoreManager
             var customer = _customerService.Login(username, password);
             if (customer != null)
             {
-                MainWindow customerWindow = new MainWindow(customer);
+                CustomerDashboardWindow customerWindow = new (customer);
                 customerWindow.Show();
                 this.Close();
             }

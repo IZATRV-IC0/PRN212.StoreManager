@@ -57,6 +57,7 @@ namespace StoreManager
                     // Staff role
                     lblRole.Content = "Staff Dashboard";
                     lbl_NameGreeting.Content = "Hello, " + _employee.Name;
+                    DisableStaffFeatures();
                     break;
                 default:
                     lblRole.Content = "Unknown Role";
@@ -80,6 +81,11 @@ namespace StoreManager
             LoginWindow loginWindow = new LoginWindow();
             loginWindow.Show();
             this.Close();
+        }
+        public void DisableStaffFeatures()
+        {
+            btn_EmployeeMenu.IsEnabled = false;
+            btn_CustomerMenu.IsEnabled = false;
         }
 
         public void LoadCustomerData()
