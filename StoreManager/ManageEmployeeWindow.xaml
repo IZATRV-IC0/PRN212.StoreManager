@@ -7,16 +7,16 @@
         <TextBox x:Name="txtEmployeeID" HorizontalAlignment="Left" Margin="180,45,0,0" Width="200" VerticalAlignment="Top"/>
 
         <Label Content="Name" FontSize="16" HorizontalAlignment="Left" Margin="40,80,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtName" HorizontalAlignment="Left" Margin="180,85,0,0" Width="200" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtName" HorizontalAlignment="Left" Margin="180,85,0,0" Width="200" VerticalAlignment="Top" MaxLength="20"/>
 
         <Label Content="Username" FontSize="16" HorizontalAlignment="Left" Margin="40,120,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtUserName" HorizontalAlignment="Left" Margin="180,125,0,0" Width="200" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtUserName" HorizontalAlignment="Left" Margin="180,125,0,0" Width="200" VerticalAlignment="Top" MaxLength="10"/>
 
         <Label Content="Password" FontSize="16" HorizontalAlignment="Left" Margin="40,160,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtPassword" HorizontalAlignment="Left" Margin="180,165,0,0" Width="200" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtPassword" HorizontalAlignment="Left" Margin="180,165,0,0" Width="200" VerticalAlignment="Top" MaxLength="25"/>
 
         <Label Content="Job Title" FontSize="16" HorizontalAlignment="Left" Margin="40,200,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtJobTitle" HorizontalAlignment="Left" Margin="180,205,0,0" Width="200" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtJobTitle" HorizontalAlignment="Left" Margin="180,205,0,0" Width="200" VerticalAlignment="Top" MaxLength="30"/>
 
         <Label Content="Birth Date" FontSize="16" HorizontalAlignment="Left" Margin="40,240,0,0" VerticalAlignment="Top"/>
         <DatePicker x:Name="dpBirthDate" HorizontalAlignment="Left" Margin="180,245,0,0" Width="200" VerticalAlignment="Top"/>
@@ -25,7 +25,7 @@
         <DatePicker x:Name="dpHireDate" HorizontalAlignment="Left" Margin="180,285,0,0" Width="200" VerticalAlignment="Top"/>
 
         <Label Content="Address" FontSize="16" HorizontalAlignment="Left" Margin="40,320,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtAddress" HorizontalAlignment="Left" Margin="180,325,0,0" Width="200" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtAddress" HorizontalAlignment="Left" Margin="180,325,0,0" Width="200" VerticalAlignment="Top" MaxLength="60"/>
 
         <Label Content="Role" FontSize="16" HorizontalAlignment="Left" Margin="40,360,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="txtRoleNum" HorizontalAlignment="Left" Margin="180,365,0,0" Width="200" VerticalAlignment="Top"/>

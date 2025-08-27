@@ -15,11 +15,11 @@
         <Label Content="Phone" FontSize="20" HorizontalAlignment="Left" Margin="121,275,0,0" VerticalAlignment="Top"/>
         <Label x:Name="lblEditor" Content="CREATE/UPDATE" FontSize="30" FontWeight="Bold" HorizontalAlignment="Left" Margin="44,10,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="txtCustomerID" HorizontalAlignment="Left" Margin="314,74,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22"/>
-        <TextBox x:Name="txtPhone" HorizontalAlignment="Left" Margin="314,284,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22"/>
-        <TextBox x:Name="txtAddress" HorizontalAlignment="Left" Margin="314,243,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22"/>
-        <TextBox x:Name="txtContactTitle" HorizontalAlignment="Left" Margin="314,200,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22"/>
-        <TextBox x:Name="txtContactName" HorizontalAlignment="Left" Margin="314,158,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22"/>
-        <TextBox x:Name="txtCompanyName" HorizontalAlignment="Left" Margin="314,114,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22"/>
+        <TextBox x:Name="txtPhone" HorizontalAlignment="Left" Margin="314,284,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22" MaxLength="24"/>
+        <TextBox x:Name="txtAddress" HorizontalAlignment="Left" Margin="314,243,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22" MaxLength="60"/>
+        <TextBox x:Name="txtContactTitle" HorizontalAlignment="Left" Margin="314,200,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22" MaxLength="30"/>
+        <TextBox x:Name="txtContactName" HorizontalAlignment="Left" Margin="314,158,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22" MaxLength="30"/>
+        <TextBox x:Name="txtCompanyName" HorizontalAlignment="Left" Margin="314,114,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22" MaxLength="40"/>
         <Button x:Name="btn_CancelCustomer" Content="Cancel" HorizontalAlignment="Left" Margin="566,354,0,0" VerticalAlignment="Top" Width="110" Click="btn_CancelCustomer_Click"/>
         <Button x:Name="btn_SaveCustomer" Content="Save" HorizontalAlignment="Left" Margin="247,354,0,0" VerticalAlignment="Top" Width="110" Click="btn_SaveCustomer_Click"/>
 

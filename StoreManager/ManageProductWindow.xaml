@@ -7,7 +7,7 @@
         <TextBox x:Name="txtProductID" HorizontalAlignment="Left" Margin="180,45,0,0" Width="200" VerticalAlignment="Top"/>
 
         <Label Content="Product Name" FontSize="16" HorizontalAlignment="Left" Margin="40,80,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtProductName" HorizontalAlignment="Left" Margin="180,85,0,0" Width="200" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtProductName" HorizontalAlignment="Left" Margin="180,85,0,0" Width="200" VerticalAlignment="Top" MaxLength="40"/>
 
         <Label Content="Supplier ID" FontSize="16" HorizontalAlignment="Left" Margin="40,120,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="txtSupplierId" HorizontalAlignment="Left" Margin="180,125,0,0" Width="200" VerticalAlignment="Top"/>
@@ -16,7 +16,7 @@
         <TextBox x:Name="txtCategoryId" HorizontalAlignment="Left" Margin="180,165,0,0" Width="200" VerticalAlignment="Top"/>
 
         <Label Content="Quantity/Unit" FontSize="16" HorizontalAlignment="Left" Margin="40,200,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtQuantityPerUnit" HorizontalAlignment="Left" Margin="180,205,0,0" Width="200" VerticalAlignment="Top"/>
+        <TextBox x:Name="txtQuantityPerUnit" HorizontalAlignment="Left" Margin="180,205,0,0" Width="200" VerticalAlignment="Top" MaxLength="20"/>
 
         <Label Content="Unit Price" FontSize="16" HorizontalAlignment="Left" Margin="40,240,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="txtUnitPrice" HorizontalAlignment="Left" Margin="180,245,0,0" Width="200" VerticalAlignment="Top"/>

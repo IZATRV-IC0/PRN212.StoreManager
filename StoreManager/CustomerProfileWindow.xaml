@@ -104,25 +104,29 @@
                 <TextBlock Grid.Row="2" Text="Company Name" Style="{StaticResource FieldLabelStyle}"/>
                 <TextBox Grid.Row="3" x:Name="txtCompanyName" 
                          Style="{StaticResource ProfileTextBoxStyle}"
-                         Margin="0,0,0,15"/>
+                         Margin="0,0,0,15"
+                         MaxLength="40"/>
                 
                 <!-- Contact Name -->
                 <TextBlock Grid.Row="4" Text="Contact Name (Username)" Style="{StaticResource FieldLabelStyle}"/>
                 <TextBox Grid.Row="5" x:Name="txtContactName" 
                          Style="{StaticResource ProfileTextBoxStyle}"
-                         Margin="0,0,0,15"/>
+                         Margin="0,0,0,15"
+                         MaxLength="30"/>
                 
                 <!-- Contact Title -->
                 <TextBlock Grid.Row="6" Text="Contact Title" Style="{StaticResource FieldLabelStyle}"/>
                 <TextBox Grid.Row="7" x:Name="txtContactTitle" 
                          Style="{StaticResource ProfileTextBoxStyle}"
-                         Margin="0,0,0,15"/>
+                         Margin="0,0,0,15"
+                         MaxLength="30"/>
                 
                 <!-- Address -->
                 <TextBlock Grid.Row="8" Text="Address" Style="{StaticResource FieldLabelStyle}"/>
                 <TextBox Grid.Row="9" x:Name="txtAddress" 
                          Style="{StaticResource ProfileTextBoxStyle}"
-                         Margin="0,0,0,15"/>
+                         Margin="0,0,0,15"
+                         MaxLength="60"/>
                 
                 <!-- Phone (Password) -->
                 <TextBlock Grid.Row="10" Text="Phone (Password)" Style="{StaticResource FieldLabelStyle}"/>
@@ -132,7 +136,8 @@
                              VerticalContentAlignment="Center"
                              BorderThickness="1"
                              BorderBrush="#DDD"
-                             Margin="0,0,0,15"/>
+                             Margin="0,0,0,15"
+                             MaxLength="24"/>
             </Grid>
         </ScrollViewer>
         
