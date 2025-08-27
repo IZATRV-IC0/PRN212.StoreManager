@@ -67,8 +67,6 @@ namespace StoreManager
                     // Staff role - Show staff menu
                     lblRole.Content = "Staff Dashboard";
                     lbl_NameGreeting.Content = "Hello, " + _employee.Name;
-                    pnlAdminMenu.Visibility = Visibility.Collapsed;
-                    pnlStaffMenu.Visibility = Visibility.Visible;
                     break;
                 default:
                     lblRole.Content = "Unknown Role";
@@ -84,6 +82,11 @@ namespace StoreManager
             LoginWindow loginWindow = new LoginWindow();
             loginWindow.Show();
             this.Close();
+        }
+        public void DisableStaffFeatures()
+        {
+            btn_EmployeeMenu.IsEnabled = false;
+            btn_CustomerMenu.IsEnabled = false;
         }
 
         public void LoadCustomerData()
@@ -379,6 +382,8 @@ namespace StoreManager
             lblSearch.Visibility = Visibility.Visible;
             cboxProductCategorySearch.Visibility = Visibility.Collapsed;
             btnSearch.Visibility = Visibility.Visible;
+            btn_Create.Visibility = Visibility.Visible;
+            btn_Delete.Visibility = Visibility.Visible;
             LoadCustomerData();
         }
 
@@ -397,6 +402,8 @@ namespace StoreManager
             lblSearch.Visibility = Visibility.Visible;
             cboxProductCategorySearch.Visibility = Visibility.Collapsed;
             btnSearch.Visibility = Visibility.Visible;
+            btn_Create.Visibility = Visibility.Visible;
+            btn_Delete.Visibility = Visibility.Visible;
             LoadEmployeeData();
         }
 
@@ -415,6 +422,8 @@ namespace StoreManager
             lblSearch.Visibility = Visibility.Visible;
             cboxProductCategorySearch.Visibility = Visibility.Visible;
             btnSearch.Visibility = Visibility.Visible;
+            btn_Create.Visibility = Visibility.Visible;
+            btn_Delete.Visibility = Visibility.Visible;
             LoadProductData();
             LoadCategoriesToSearch();
         }
@@ -433,6 +442,8 @@ namespace StoreManager
             lblSearch.Visibility = Visibility.Collapsed;
             cboxProductCategorySearch.Visibility = Visibility.Collapsed;
             btnSearch.Visibility = Visibility.Collapsed;
+            btn_Create.Visibility = Visibility.Visible;
+            btn_Delete.Visibility = Visibility.Visible;
             LoadCategoryData();
         }
 
