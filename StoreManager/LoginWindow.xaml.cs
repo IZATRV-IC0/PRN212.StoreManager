@@ -51,6 +51,13 @@ namespace StoreManager
                         adminDashboard.Show();
                         this.Close();
                         break;
+                    case 2:
+                        //Manager role
+                        MainWindow managerDashboard = new MainWindow(employee);
+                        MessageBox.Show("Welcome, Manager!", "Login Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                        managerDashboard.Show();
+                        this.Close();
+                        break;
                     case 3:
                         //Staff role
                         MainWindow staffDashboard = new MainWindow(employee);
@@ -89,19 +96,19 @@ namespace StoreManager
                 MessageBox.Show("Please enter both username and password.", "Input Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            //Customer login
-            _customerService = new CustomerManagementService();
-            var customer = _customerService.Login(username, password);
-            if (customer != null)
-            {
-                CustomerDashboardWindow customerWindow = new (customer);
-                customerWindow.Show();
-                this.Close();
-            }
-            else
-            {
-                MessageBox.Show("Invalid username or password. Please try again.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+                         //Customer login
+             _customerService = new CustomerManagementService();
+             var customer = _customerService.Login(username, password);
+             if (customer != null)
+             {
+                 CustomerDashboardWindow customerWindow = new CustomerDashboardWindow(customer);
+                 customerWindow.Show();
+                 this.Close();
+             }
+             else
+             {
+                 MessageBox.Show("Invalid username or password. Please try again.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+             }
         }
     }
 }

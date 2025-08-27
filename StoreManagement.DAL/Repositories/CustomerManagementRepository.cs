@@ -21,7 +21,16 @@ namespace StoreManagement.DAL.Repositories
         }
         public Customer GetCustomerByUserNameAndPassword(string userName, string password)
         {
-            return _context.Customers.FirstOrDefault(c => c.ContactName == userName && c.Phone == password);
+            try
+            {
+                return _context.Customers.FirstOrDefault(c => c.ContactName == userName && c.Phone == password);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (in a real app, use proper logging)
+                System.Diagnostics.Debug.WriteLine($"Database error in GetCustomerByUserNameAndPassword: {ex.Message}");
+                throw new InvalidOperationException("Unable to connect to database. Please check your connection and try again.", ex);
+            }
         }
         public List<Customer> SearchByName(string name)
         {

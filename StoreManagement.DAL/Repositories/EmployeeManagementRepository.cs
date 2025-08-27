@@ -21,7 +21,16 @@ namespace StoreManagement.DAL.Repositories
         }
         public Employee GetEmployeeByUserNameAndPassword(string userName, string password)
         {
-            return _context.Employees.FirstOrDefault(e => e.UserName == userName && e.Password == password);
+            try
+            {
+                return _context.Employees.FirstOrDefault(e => e.UserName == userName && e.Password == password);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception (in a real app, use proper logging)
+                System.Diagnostics.Debug.WriteLine($"Database error in GetEmployeeByUserNameAndPassword: {ex.Message}");
+                throw new InvalidOperationException("Unable to connect to database. Please check your connection and try again.", ex);
+            }
         }
         public List<Employee> SearchByName(string name)
         {

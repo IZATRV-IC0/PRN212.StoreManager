@@ -39,7 +39,7 @@ namespace StoreManager
             txtContactName.Text = _customer.ContactName;
             txtContactTitle.Text = _customer.ContactTitle;
             txtAddress.Text = _customer.Address;
-            txtPhone.Password = _customer.Phone;
+            txtPhone.Text = _customer.Phone;
         }
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
@@ -61,7 +61,7 @@ namespace StoreManager
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(txtPhone.Password))
+                if (string.IsNullOrWhiteSpace(txtPhone.Text))
                 {
                     MessageBox.Show("Phone (password) is required.", "Validation Error", 
                         MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -73,7 +73,7 @@ namespace StoreManager
                 _customer.ContactName = txtContactName.Text.Trim();
                 _customer.ContactTitle = txtContactTitle.Text.Trim();
                 _customer.Address = txtAddress.Text.Trim();
-                _customer.Phone = txtPhone.Password.Trim();
+                _customer.Phone = txtPhone.Text.Trim();
 
                 // Save to database
                 _customerService.UpdateCustomer(_customer);
@@ -92,6 +92,11 @@ namespace StoreManager
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnBack_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }

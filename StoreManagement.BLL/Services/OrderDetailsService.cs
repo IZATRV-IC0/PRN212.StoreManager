@@ -64,5 +64,14 @@ namespace StoreManagement.BLL.Services
             }
             return _orderDetailsRepository.GetOrderDetailsByEmployeeId(employeeId);
         }
+
+        public void CreateOrderDetail(StoreManagement.DAL.Entities.OrderDetail orderDetail)
+        {
+            if (orderDetail == null)
+            {
+                throw new ArgumentNullException(nameof(orderDetail), "OrderDetail cannot be null");
+            }
+            _orderDetailsRepository.Add(orderDetail);
+        }
     }
 }
