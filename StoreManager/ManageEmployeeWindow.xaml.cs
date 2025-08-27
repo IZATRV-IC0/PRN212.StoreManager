@@ -2,6 +2,7 @@
 using StoreManagement.DAL.Entities;
 using System;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace StoreManager
 {
@@ -39,9 +40,9 @@ namespace StoreManager
 
         public bool ValidateInput()
         {
-            if (string.IsNullOrEmpty(txtName.Text) || string.IsNullOrEmpty(txtUserName.Text))
+            if (string.IsNullOrEmpty(txtEmployeeName.Text) || string.IsNullOrEmpty(txtUserName.Text) || string.IsNullOrEmpty(txtPassword.Password) || cboRole.SelectedItem == null)
             {
-                MessageBox.Show("Please fill in required fields (Name, Username).",
+                MessageBox.Show("Please fill in required fields (Name, Username, Password, Role).",
                                 "Input Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
@@ -52,14 +53,22 @@ namespace StoreManager
         {
             employeeEdit = employee;
             txtEmployeeID.Text = employee.EmployeeId.ToString();
-            txtName.Text = employee.Name;
+            txtEmployeeName.Text = employee.Name;
             txtUserName.Text = employee.UserName;
-            txtPassword.Text = employee.Password;
+            txtPassword.Password = employee.Password;
             txtJobTitle.Text = employee.JobTitle;
             dpBirthDate.SelectedDate = employee.BirthDate;
             dpHireDate.SelectedDate = employee.HireDate;
             txtAddress.Text = employee.Address;
-            txtRoleNum.Text = employee.RoleNum?.ToString();
+            // Set role in ComboBox
+            foreach (ComboBoxItem item in cboRole.Items)
+            {
+                if (item.Tag?.ToString() == employee.RoleNum?.ToString())
+                {
+                    cboRole.SelectedItem = item;
+                    break;
+                }
+            }
         }
 
         private void btn_SaveEmployee_Click(object sender, RoutedEventArgs e)
@@ -72,14 +81,15 @@ namespace StoreManager
             if (employeeEdit != null)
             {
                 // Update
-                employeeEdit.Name = txtName.Text.Trim();
+                employeeEdit.Name = txtEmployeeName.Text.Trim();
                 employeeEdit.UserName = txtUserName.Text.Trim();
-                employeeEdit.Password = txtPassword.Text.Trim();
+                employeeEdit.Password = txtPassword.Password;
                 employeeEdit.JobTitle = txtJobTitle.Text.Trim();
                 employeeEdit.BirthDate = dpBirthDate.SelectedDate;
                 employeeEdit.HireDate = dpHireDate.SelectedDate;
                 employeeEdit.Address = txtAddress.Text.Trim();
-                employeeEdit.RoleNum = int.TryParse(txtRoleNum.Text, out int role) ? role : null;
+                var selectedRole = (ComboBoxItem)cboRole.SelectedItem;
+                employeeEdit.RoleNum = selectedRole?.Tag != null ? int.Parse(selectedRole.Tag.ToString()!) : null;
 
                 _employeeManagementService.UpdateEmployee(employeeEdit);
                 MessageBox.Show("Employee updated successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -89,14 +99,14 @@ namespace StoreManager
                 // Create
                 Employee newEmployee = new Employee
                 {
-                    Name = txtName.Text.Trim(),
+                    Name = txtEmployeeName.Text.Trim(),
                     UserName = txtUserName.Text.Trim(),
-                    Password = txtPassword.Text.Trim(),
+                    Password = txtPassword.Password,
                     JobTitle = txtJobTitle.Text.Trim(),
                     BirthDate = dpBirthDate.SelectedDate,
                     HireDate = dpHireDate.SelectedDate,
                     Address = txtAddress.Text.Trim(),
-                    RoleNum = int.TryParse(txtRoleNum.Text, out int role) ? role : null
+                    RoleNum = ((ComboBoxItem)cboRole.SelectedItem)?.Tag != null ? int.Parse(((ComboBoxItem)cboRole.SelectedItem).Tag.ToString()!) : null
                 };
 
                 _employeeManagementService.AddEmployee(newEmployee);

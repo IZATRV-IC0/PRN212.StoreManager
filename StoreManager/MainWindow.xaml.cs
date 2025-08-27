@@ -45,19 +45,28 @@ namespace StoreManager
         {
             InitializeComponent();
             _employee = employee;
+            
+            // Initialize services
+            _customerManagementService = new CustomerManagementService();
+            _employeeManagementService = new EmployeeManagementService();
+            _productService = new ProductService();
+            _categoryService = new CategoryService();
+            _orderService = new OrderService();
+            _orderDetailsService = new OrderDetailsService();
 
             switch (_employee.RoleNum)
             {
                 case 1:
-                    // Admin role
+                    // Admin role - Show admin menu
                     lblRole.Content = "Admin Dashboard";
                     lbl_NameGreeting.Content = "Hello, " + _employee.Name;
+                    pnlAdminMenu.Visibility = Visibility.Visible;
+                    pnlStaffMenu.Visibility = Visibility.Collapsed;
                     break;
                 case 3:
-                    // Staff role
+                    // Staff role - Show staff menu
                     lblRole.Content = "Staff Dashboard";
                     lbl_NameGreeting.Content = "Hello, " + _employee.Name;
-                    DisableStaffFeatures();
                     break;
                 default:
                     lblRole.Content = "Unknown Role";
@@ -65,15 +74,7 @@ namespace StoreManager
             }
         }
 
-        public MainWindow(Customer customer)
-        {
-            InitializeComponent();
 
-            // Redirect to CustomerDashboardWindow
-            CustomerDashboardWindow customerWindow = new CustomerDashboardWindow(customer);
-            customerWindow.Show();
-            this.Close();
-        }
 
         private void btn_Logout_Click(object sender, RoutedEventArgs e)
         {
@@ -138,7 +139,7 @@ namespace StoreManager
             if (_currentMode == ManageMode.Customer)
             {
                 ManageCustomerWindow manageCustomerWindow = new();
-                manageCustomerWindow.lblEditor.Content = "Create New Customer";
+                manageCustomerWindow.lblEditor.Text = "Create New Customer";
                 manageCustomerWindow.ShowDialog();
                 dgCustomer.ItemsSource = null;
                 dgCustomer.ItemsSource = _customerManagementService.GetAllCustomers().ToList();
@@ -146,7 +147,7 @@ namespace StoreManager
             else if (_currentMode == ManageMode.Employee)
             {
                 ManageEmployeeWindow manageEmployeeWindow = new();
-                manageEmployeeWindow.lblEditor.Content = "Create New Employee";
+                manageEmployeeWindow.lblEditor.Text = "Create New Employee";
                 manageEmployeeWindow.ShowDialog();
                 dgEmployee.ItemsSource = null;
                 dgEmployee.ItemsSource = _employeeManagementService.GetAllEmployees().ToList();
@@ -154,7 +155,7 @@ namespace StoreManager
             else if (_currentMode == ManageMode.Product)
             {
                 ManageProductWindow manageProductWindow = new();
-                manageProductWindow.lblEditor.Content = "Create New Product";
+                manageProductWindow.lblEditor.Text = "Create New Product";
                 manageProductWindow.ShowDialog();
                 dgProduct.ItemsSource = null;
                 dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
@@ -162,7 +163,7 @@ namespace StoreManager
             else if (_currentMode == ManageMode.Category)
             {
                 ManageCategoryWindow manageCategoryWindow = new();
-                manageCategoryWindow.lblEditor.Content = "Create New Category";
+                manageCategoryWindow.lblEditor.Text = "Create New Category";
                 manageCategoryWindow.ShowDialog();
                 dgCategory.ItemsSource = null;
                 dgCategory.ItemsSource = _categoryService.GetAllCategories().ToList();
@@ -177,7 +178,7 @@ namespace StoreManager
                 if (selectedCustomer != null)
                 {
                     ManageCustomerWindow updateWindow = new();
-                    updateWindow.lblEditor.Content = "Update Customer";
+                    updateWindow.lblEditor.Text = "Update Customer";
                     updateWindow.customerEdit = selectedCustomer;
                     updateWindow.ShowDialog();
                     dgCustomer.ItemsSource = null;
@@ -194,7 +195,7 @@ namespace StoreManager
                 if (selectedEmployee != null)
                 {
                     ManageEmployeeWindow updateWindow = new();
-                    updateWindow.lblEditor.Content = "Update Employee";
+                    updateWindow.lblEditor.Text = "Update Employee";
                     updateWindow.employeeEdit = selectedEmployee;
                     updateWindow.ShowDialog();
                     dgEmployee.ItemsSource = null;
@@ -211,7 +212,7 @@ namespace StoreManager
                 if (selectedProduct != null)
                 {
                     ManageProductWindow updateWindow = new();
-                    updateWindow.lblEditor.Content = "Update Product";
+                    updateWindow.lblEditor.Text = "Update Product";
                     updateWindow.productEdit = selectedProduct;
                     updateWindow.ShowDialog();
                     dgProduct.ItemsSource = null;
@@ -228,7 +229,7 @@ namespace StoreManager
                 if (selectedCategory != null)
                 {
                     ManageCategoryWindow updateWindow = new();
-                    updateWindow.lblEditor.Content = "Update Category";
+                    updateWindow.lblEditor.Text = "Update Category";
                     updateWindow.categoryEdit = selectedCategory;
                     updateWindow.ShowDialog();
                     dgCategory.ItemsSource = null;
@@ -369,6 +370,7 @@ namespace StoreManager
         private void btn_CustomerMenu_Click(object sender, RoutedEventArgs e)
         {
             _currentMode = ManageMode.Customer;
+            ShowDataManagement();
             dgCustomer.Visibility = Visibility.Visible;
             dgEmployee.Visibility = Visibility.Collapsed;
             dgProduct.Visibility = Visibility.Collapsed;
@@ -388,6 +390,7 @@ namespace StoreManager
         private void btn_EmployeeMenu_Click(object sender, RoutedEventArgs e)
         {
             _currentMode = ManageMode.Employee;
+            ShowDataManagement();
             dgCustomer.Visibility = Visibility.Collapsed;
             dgEmployee.Visibility = Visibility.Visible;
             dgProduct.Visibility = Visibility.Collapsed;
@@ -407,6 +410,7 @@ namespace StoreManager
         private void btn_Product_Click(object sender, RoutedEventArgs e)
         {
             _currentMode = ManageMode.Product;
+            ShowDataManagement();
             dgCustomer.Visibility = Visibility.Collapsed;
             dgEmployee.Visibility = Visibility.Collapsed;
             dgProduct.Visibility = Visibility.Visible;
@@ -427,6 +431,7 @@ namespace StoreManager
         private void btn_Category_Click(object sender, RoutedEventArgs e)
         {
             _currentMode = ManageMode.Category;
+            ShowDataManagement();
             dgCategory.Visibility = Visibility.Visible;
             dgCustomer.Visibility = Visibility.Collapsed;
             dgEmployee.Visibility = Visibility.Collapsed;
@@ -445,6 +450,7 @@ namespace StoreManager
         private void btn_OrderManager_Click(object sender, RoutedEventArgs e)
         {
             _currentMode = ManageMode.Order;
+            ShowDataManagement();
             btn_Create.Visibility = Visibility.Collapsed;
             btn_Delete.Visibility = Visibility.Collapsed;
             dgOrder.Visibility = Visibility.Visible;
@@ -531,5 +537,225 @@ namespace StoreManager
                     break;
             }
         }
+
+        private void ShowDataManagement()
+        {
+            pnlAdminMenu.Visibility = Visibility.Collapsed;
+            pnlStaffMenu.Visibility = Visibility.Collapsed;
+            pnlDataManagement.Visibility = Visibility.Visible;
+        }
+
+        private void ShowMainMenu()
+        {
+            // Show appropriate menu based on role
+            if (_employee.RoleNum == 1)
+            {
+                pnlAdminMenu.Visibility = Visibility.Visible;
+                pnlStaffMenu.Visibility = Visibility.Collapsed;
+            }
+            else if (_employee.RoleNum == 3)
+            {
+                pnlAdminMenu.Visibility = Visibility.Collapsed;
+                pnlStaffMenu.Visibility = Visibility.Visible;
+            }
+            
+            pnlDataManagement.Visibility = Visibility.Collapsed;
+            
+            // Hide all search controls
+            txtSearchValue.Visibility = Visibility.Collapsed;
+            lblSearch.Visibility = Visibility.Collapsed;
+            cboxProductCategorySearch.Visibility = Visibility.Collapsed;
+            btnSearch.Visibility = Visibility.Collapsed;
+            
+            // Hide all DataGrids
+            dgCustomer.Visibility = Visibility.Collapsed;
+            dgEmployee.Visibility = Visibility.Collapsed;
+            dgProduct.Visibility = Visibility.Collapsed;
+            dgCategory.Visibility = Visibility.Collapsed;
+            dgOrder.Visibility = Visibility.Collapsed;
+            dgOrderDetail.Visibility = Visibility.Collapsed;
+            
+            // Reset action buttons visibility
+            btn_Create.Visibility = Visibility.Visible;
+            btn_Delete.Visibility = Visibility.Visible;
+        }
+
+        private void btnBackToMenu_Click(object sender, RoutedEventArgs e)
+        {
+            ShowMainMenu();
+        }
+
+        #region Staff Event Handlers
+
+        private void btn_Staff_CreateOrder_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Open Order Creation Window
+                OrderWindow orderWindow = new OrderWindow(_employee);
+                orderWindow.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error opening order creation window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void btn_Staff_ViewProducts_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                _currentMode = ManageMode.Product;
+                ShowDataManagement();
+                
+                // Hide unnecessary controls for staff
+                btn_Create.Visibility = Visibility.Collapsed;
+                btn_Update.Visibility = Visibility.Collapsed;
+                btn_Delete.Visibility = Visibility.Collapsed;
+                
+                // Show product data
+                dgProduct.Visibility = Visibility.Visible;
+                dgCustomer.Visibility = Visibility.Collapsed;
+                dgEmployee.Visibility = Visibility.Collapsed;
+                dgCategory.Visibility = Visibility.Collapsed;
+                dgOrder.Visibility = Visibility.Collapsed;
+                dgOrderDetail.Visibility = Visibility.Collapsed;
+                
+                // Setup search for products
+                txtSearchValue.Visibility = Visibility.Visible;
+                lblSearch.Content = "Product Name";
+                lblSearch.Visibility = Visibility.Visible;
+                cboxProductCategorySearch.Visibility = Visibility.Visible;
+                btnSearch.Visibility = Visibility.Visible;
+                
+                LoadProductData();
+                LoadCategoriesToSearch();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading products: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void btn_Staff_ViewCategories_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                _currentMode = ManageMode.Category;
+                ShowDataManagement();
+                
+                // Hide action buttons for staff
+                btn_Create.Visibility = Visibility.Collapsed;
+                btn_Update.Visibility = Visibility.Collapsed;
+                btn_Delete.Visibility = Visibility.Collapsed;
+                
+                // Show category data
+                dgCategory.Visibility = Visibility.Visible;
+                dgCustomer.Visibility = Visibility.Collapsed;
+                dgEmployee.Visibility = Visibility.Collapsed;
+                dgProduct.Visibility = Visibility.Collapsed;
+                dgOrder.Visibility = Visibility.Collapsed;
+                dgOrderDetail.Visibility = Visibility.Collapsed;
+                
+                // Hide search for categories (simple view)
+                txtSearchValue.Visibility = Visibility.Collapsed;
+                lblSearch.Visibility = Visibility.Collapsed;
+                cboxProductCategorySearch.Visibility = Visibility.Collapsed;
+                btnSearch.Visibility = Visibility.Collapsed;
+                
+                LoadCategoryData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading categories: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void btn_Staff_ManageCustomers_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                _currentMode = ManageMode.Customer;
+                ShowDataManagement();
+                
+                // Staff can create and update customers, but not delete
+                btn_Create.Visibility = Visibility.Visible;
+                btn_Update.Visibility = Visibility.Visible;
+                btn_Delete.Visibility = Visibility.Collapsed;
+                
+                // Show customer data
+                dgCustomer.Visibility = Visibility.Visible;
+                dgEmployee.Visibility = Visibility.Collapsed;
+                dgProduct.Visibility = Visibility.Collapsed;
+                dgCategory.Visibility = Visibility.Collapsed;
+                dgOrder.Visibility = Visibility.Collapsed;
+                dgOrderDetail.Visibility = Visibility.Collapsed;
+                
+                // Setup search for customers
+                txtSearchValue.Visibility = Visibility.Visible;
+                lblSearch.Content = "Customer Name";
+                lblSearch.Visibility = Visibility.Visible;
+                cboxProductCategorySearch.Visibility = Visibility.Collapsed;
+                btnSearch.Visibility = Visibility.Visible;
+                
+                LoadCustomerData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading customers: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void btn_Staff_MyOrders_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                _currentMode = ManageMode.Order;
+                ShowDataManagement();
+                
+                // Staff can only view their orders, no create/delete
+                btn_Create.Visibility = Visibility.Collapsed;
+                btn_Update.Visibility = Visibility.Visible; // Can update order details
+                btn_Delete.Visibility = Visibility.Collapsed;
+                
+                // Show order data
+                dgOrder.Visibility = Visibility.Visible;
+                dgOrderDetail.Visibility = Visibility.Visible;
+                dgCustomer.Visibility = Visibility.Collapsed;
+                dgEmployee.Visibility = Visibility.Collapsed;
+                dgProduct.Visibility = Visibility.Collapsed;
+                dgCategory.Visibility = Visibility.Collapsed;
+                
+                // Setup search for orders
+                lblSearch.Content = "Order ID";
+                txtSearchValue.Visibility = Visibility.Visible;
+                lblSearch.Visibility = Visibility.Visible;
+                cboxProductCategorySearch.Visibility = Visibility.Collapsed;
+                btnSearch.Visibility = Visibility.Visible;
+                
+                LoadStaffOrderData();
+                dgOrderDetail.ItemsSource = null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading orders: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void LoadStaffOrderData()
+        {
+            try
+            {
+                // Load only orders created by this staff member
+                var orders = _orderService.GetOrdersByEmployee(_employee.EmployeeId);
+                dgOrder.ItemsSource = orders;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading staff orders: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        #endregion
     }
 }

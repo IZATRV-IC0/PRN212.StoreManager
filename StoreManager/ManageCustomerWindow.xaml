@@ -5,23 +5,97 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StoreManager"
         mc:Ignorable="d"
-        Title="Manage Customer Window" Height="450" Width="800" Loaded="Window_Loaded">
-    <Grid>
-        <Label x:Name="lblCustomerID" Content="Customer ID" FontSize="20" HorizontalAlignment="Left" Margin="122,65,0,0" VerticalAlignment="Top"/>
-        <Label Content="Company Name" FontSize="20" HorizontalAlignment="Left" Margin="122,107,0,0" VerticalAlignment="Top"/>
-        <Label Content="Contact Name" FontSize="20" HorizontalAlignment="Left" Margin="122,149,0,0" VerticalAlignment="Top"/>
-        <Label Content="Contact Title" FontSize="20" HorizontalAlignment="Left" Margin="121,191,0,0" VerticalAlignment="Top"/>
-        <Label Content="Address" FontSize="20" HorizontalAlignment="Left" Margin="121,233,0,0" VerticalAlignment="Top"/>
-        <Label Content="Phone" FontSize="20" HorizontalAlignment="Left" Margin="121,275,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="lblEditor" Content="CREATE/UPDATE" FontSize="30" FontWeight="Bold" HorizontalAlignment="Left" Margin="44,10,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="txtCustomerID" HorizontalAlignment="Left" Margin="314,74,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22"/>
-        <TextBox x:Name="txtPhone" HorizontalAlignment="Left" Margin="314,284,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22"/>
-        <TextBox x:Name="txtAddress" HorizontalAlignment="Left" Margin="314,243,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22"/>
-        <TextBox x:Name="txtContactTitle" HorizontalAlignment="Left" Margin="314,200,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22"/>
-        <TextBox x:Name="txtContactName" HorizontalAlignment="Left" Margin="314,158,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22"/>
-        <TextBox x:Name="txtCompanyName" HorizontalAlignment="Left" Margin="314,114,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" Height="22"/>
-        <Button x:Name="btn_CancelCustomer" Content="Cancel" HorizontalAlignment="Left" Margin="566,354,0,0" VerticalAlignment="Top" Width="110" Click="btn_CancelCustomer_Click"/>
-        <Button x:Name="btn_SaveCustomer" Content="Save" HorizontalAlignment="Left" Margin="247,354,0,0" VerticalAlignment="Top" Width="110" Click="btn_SaveCustomer_Click"/>
+        Title="Manage Customer" Height="600" Width="500" 
+        WindowStartupLocation="CenterScreen" ResizeMode="NoResize"
+        Loaded="Window_Loaded">
 
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="70"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Style="{StaticResource HeaderBorderStyle}">
+            <TextBlock x:Name="lblEditor" Text="Manage Customer" 
+                       Style="{StaticResource HeaderStyle}"/>
+        </Border>
+
+        <!-- Form Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="20">
+            <StackPanel>
+                <!-- Customer ID -->
+                <StackPanel x:Name="pnlCustomerID" Margin="0,0,0,15">
+                    <TextBlock x:Name="lblCustomerID" Text="Customer ID" 
+                               Style="{StaticResource CommonLabelStyle}"/>
+                    <TextBox x:Name="txtCustomerID" 
+                             Style="{StaticResource CommonTextBoxStyle}"
+                             IsReadOnly="True" Background="#F0F0F0"/>
+                </StackPanel>
+
+                <!-- Company Name -->
+                <StackPanel Margin="0,0,0,15">
+                    <TextBlock Text="Company Name *" 
+                               Style="{StaticResource CommonLabelStyle}"/>
+                    <TextBox x:Name="txtCompanyName" 
+                             Style="{StaticResource CommonTextBoxStyle}"/>
+                </StackPanel>
+
+                <!-- Contact Name -->
+                <StackPanel Margin="0,0,0,15">
+                    <TextBlock Text="Contact Name *" 
+                               Style="{StaticResource CommonLabelStyle}"/>
+                    <TextBox x:Name="txtContactName" 
+                             Style="{StaticResource CommonTextBoxStyle}"/>
+                </StackPanel>
+
+                <!-- Contact Title -->
+                <StackPanel Margin="0,0,0,15">
+                    <TextBlock Text="Contact Title" 
+                               Style="{StaticResource CommonLabelStyle}"/>
+                    <TextBox x:Name="txtContactTitle" 
+                             Style="{StaticResource CommonTextBoxStyle}"/>
+                </StackPanel>
+
+                <!-- Address -->
+                <StackPanel Margin="0,0,0,15">
+                    <TextBlock Text="Address" 
+                               Style="{StaticResource CommonLabelStyle}"/>
+                    <TextBox x:Name="txtAddress" 
+                             Style="{StaticResource CommonTextBoxStyle}"
+                             Height="40" AcceptsReturn="True" TextWrapping="Wrap"/>
+                </StackPanel>
+
+                <!-- Phone -->
+                <StackPanel Margin="0,0,0,15">
+                    <TextBlock Text="Phone" 
+                               Style="{StaticResource CommonLabelStyle}"/>
+                    <TextBox x:Name="txtPhone" 
+                             Style="{StaticResource CommonTextBoxStyle}"/>
+                </StackPanel>
+
+                <!-- Required fields note -->
+                <TextBlock Text="* Required fields" 
+                           FontSize="11" FontStyle="Italic" 
+                           Foreground="#666666" Margin="0,10,0,0"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Action Buttons -->
+        <Border Grid.Row="2" Background="#F8F9FA" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0">
+            <StackPanel Orientation="Horizontal" 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center">
+                <Button x:Name="btn_SaveCustomer" Content="💾 Save" 
+                        Style="{StaticResource SuccessButtonStyle}" 
+                        Width="120" Height="40" Margin="0,0,15,0"
+                        Click="btn_SaveCustomer_Click"/>
+                <Button x:Name="btn_CancelCustomer" Content="❌ Cancel" 
+                        Style="{StaticResource CommonButtonStyle}" 
+                        Width="120" Height="40" Background="#6C757D"
+                        Click="btn_CancelCustomer_Click"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>

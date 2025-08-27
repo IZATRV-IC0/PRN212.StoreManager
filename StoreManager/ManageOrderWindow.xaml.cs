@@ -3,6 +3,7 @@ using StoreManagement.DAL.Entities;
 using System;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace StoreManager
 {
@@ -77,16 +78,17 @@ namespace StoreManager
             }
 
             // Load order details
-            var orderDetails = _orderDetailsService.GetOrderDetailsByOrderId(order.OrderId);
-            dgOrderDetails.ItemsSource = orderDetails;
+            // Note: Order details view removed from simplified UI
+            // var orderDetails = _orderDetailsService.GetOrderDetailsByOrderId(order.OrderId);
+            // dgOrderDetails.ItemsSource = orderDetails;
         }
 
-        private void btn_Cancel_Click(object sender, RoutedEventArgs e)
+        private void btn_CancelOrder_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
-        private void btn_Save_Click(object sender, RoutedEventArgs e)
+        private void btn_SaveOrder_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -118,12 +120,8 @@ namespace StoreManager
                 // Update order in database
                 _orderService.UpdateOrder(OrderEdit);
 
-                // Update order details
-                var updatedOrderDetails = dgOrderDetails.ItemsSource.Cast<OrderDetail>().ToList();
-                foreach (var detail in updatedOrderDetails)
-                {
-                    _orderDetailsService.UpdateOrderDetail(detail);
-                }
+                // Note: Order details update removed from simplified UI
+                // Order details would be updated here if UI supported it
 
                 MessageBox.Show("Order updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                 this.DialogResult = true;

@@ -73,5 +73,17 @@ namespace StoreManagement.DAL.Repositories
                 .ToList();
         }
 
+        public void Add(OrderDetail orderDetail)
+        {
+            try
+            {
+                _context.OrderDetails.Add(orderDetail);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to save order detail: {ex.Message}", ex);
+            }
+        }
     }
 }

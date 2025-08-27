@@ -20,6 +20,8 @@ namespace StoreManager
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            LoadCategories();
+            
             if (productEdit != null)
             {
                 FillProductForm(productEdit);
@@ -27,8 +29,21 @@ namespace StoreManager
             }
             else
             {
-                lblProductID.Visibility = Visibility.Hidden;
-                txtProductID.Visibility = Visibility.Hidden;
+                pnlProductID.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void LoadCategories()
+        {
+            try
+            {
+                var categoryService = new CategoryService();
+                var categories = categoryService.GetAllCategories();
+                cboCategory.ItemsSource = categories;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading categories: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -52,8 +67,8 @@ namespace StoreManager
             productEdit = product;
             txtProductID.Text = product.ProductId.ToString();
             txtProductName.Text = product.ProductName;
-            txtSupplierId.Text = product.SupplierId?.ToString();
-            txtCategoryId.Text = product.CategoryId?.ToString();
+            txtSupplierID.Text = product.SupplierId?.ToString();
+            cboCategory.SelectedValue = product.CategoryId;
             txtQuantityPerUnit.Text = product.QuantityPerUnit;
             txtUnitPrice.Text = product.UnitPrice?.ToString();
             txtUnitsInStock.Text = product.UnitsInStock?.ToString();
@@ -73,8 +88,8 @@ namespace StoreManager
             {
                 // Update existing product
                 productEdit.ProductName = txtProductName.Text.Trim();
-                productEdit.SupplierId = int.TryParse(txtSupplierId.Text, out int supplier) ? supplier : null;
-                productEdit.CategoryId = int.TryParse(txtCategoryId.Text, out int category) ? category : null;
+                productEdit.SupplierId = int.TryParse(txtSupplierID.Text, out int supplier) ? supplier : null;
+                productEdit.CategoryId = cboCategory.SelectedValue != null ? (int)cboCategory.SelectedValue : null;
                 productEdit.QuantityPerUnit = txtQuantityPerUnit.Text.Trim();
                 productEdit.UnitPrice = decimal.TryParse(txtUnitPrice.Text, out decimal price) ? price : null;
                 productEdit.UnitsInStock = int.TryParse(txtUnitsInStock.Text, out int stock) ? stock : null;
@@ -91,8 +106,8 @@ namespace StoreManager
                 Product newProduct = new Product
                 {
                     ProductName = txtProductName.Text.Trim(),
-                    SupplierId = int.TryParse(txtSupplierId.Text, out int supplier) ? supplier : null,
-                    CategoryId = int.TryParse(txtCategoryId.Text, out int category) ? category : null,
+                    SupplierId = int.TryParse(txtSupplierID.Text, out int supplier) ? supplier : null,
+                    CategoryId = cboCategory.SelectedValue != null ? (int)cboCategory.SelectedValue : null,
                     QuantityPerUnit = txtQuantityPerUnit.Text.Trim(),
                     UnitPrice = decimal.TryParse(txtUnitPrice.Text, out decimal price) ? price : null,
                     UnitsInStock = int.TryParse(txtUnitsInStock.Text, out int stock) ? stock : null,

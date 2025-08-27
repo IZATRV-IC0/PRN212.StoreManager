@@ -16,8 +16,8 @@ namespace StoreManager
             InitializeComponent();
             _customer = customer;
 
-            // Set user info
-            lblUserInfo.Content = $"Welcome, {_customer.ContactName ?? _customer.CompanyName}";
+            
+           
 
             // Subscribe to cart changes
             ShoppingCartService.Instance.CartChanged += OnCartChanged;

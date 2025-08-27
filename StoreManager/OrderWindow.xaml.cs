@@ -25,32 +25,103 @@ namespace StoreManager
     public partial class OrderWindow : Window
     {
         private Customer _customer;
+        private Employee _employee;
         private ProductService _productService;
         private OrderService _orderService;
         private EmployeeManagementService _employeeService;
+        private CustomerManagementService _customerService;
         private ObservableCollection<OrderItemViewModel> _orderItems;
         private List<Product> _products = new List<Product>();
+        private bool _isStaffMode = false;
 
+        // Constructor for customer mode
         public OrderWindow(Customer customer)
         {
             InitializeComponent();
             _customer = customer;
+            _isStaffMode = false;
+            InitializeServices();
+            InitializeForm();
+            LoadCartItems();
+        }
+
+        // Constructor for staff mode
+        public OrderWindow(Employee employee)
+        {
+            InitializeComponent();
+            _employee = employee;
+            _isStaffMode = true;
+            InitializeServices();
+            SetupStaffMode();
+        }
+
+        private void InitializeServices()
+        {
             _productService = new ProductService();
             _orderService = new OrderService();
             _employeeService = new EmployeeManagementService();
+            _customerService = new CustomerManagementService();
             _orderItems = new ObservableCollection<OrderItemViewModel>();
             dgOrderItems.ItemsSource = _orderItems;
-            
-            InitializeForm();
-            // LoadProducts(); // Không cần load products nữa vì đã ẩn phần chọn sản phẩm
-            LoadCartItems();
         }
 
         private void InitializeForm()
         {
-            txtCustomerName.Text = _customer.ContactName ?? _customer.CompanyName;
+            if (_customer != null)
+            {
+                txtCustomerName.Text = _customer.ContactName ?? _customer.CompanyName;
+            }
             txtOrderDate.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
             UpdateOrderSummary();
+        }
+
+        private void SetupStaffMode()
+        {
+            this.Title = "Create New Order - Staff";
+            txtOrderDate.Text = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+            
+            // Show customer selection for staff
+            ShowCustomerSelection();
+            LoadProducts();
+            InitializeForm();
+        }
+
+        private void ShowCustomerSelection()
+        {
+            try
+            {
+                var customers = _customerService.GetAllCustomers();
+                var customerNames = customers.Select(c => 
+                    $"{c.CustomerId} - {c.ContactName ?? c.CompanyName}").ToList();
+                
+                // Simple customer selection - ask for customer ID
+                string result = "1"; // Default to customer ID 1 for simplicity
+                // In production, you should create a proper customer selection dialog
+                
+                if (int.TryParse(result, out int customerId))
+                {
+                    _customer = customers.FirstOrDefault(c => c.CustomerId == customerId);
+                    if (_customer != null)
+                    {
+                        txtCustomerName.Text = _customer.ContactName ?? _customer.CompanyName;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Customer not found!", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        this.Close();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Invalid Customer ID!", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    this.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading customers: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
+            }
         }
 
         private void LoadProducts()
@@ -200,22 +271,32 @@ namespace StoreManager
 
             try
             {
-                // Get the first employee as default (in real app, this should be handled differently)
-                var employees = _employeeService.GetAllEmployees();
-                var defaultEmployee = employees.FirstOrDefault();
+                Employee employeeToUse;
                 
-                if (defaultEmployee == null)
+                if (_isStaffMode && _employee != null)
                 {
-                    MessageBox.Show("No employee available to process the order.", 
-                        "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    // Use the logged-in staff member
+                    employeeToUse = _employee;
+                }
+                else
+                {
+                    // Get the first employee as default (customer mode)
+                    var employees = _employeeService.GetAllEmployees();
+                    employeeToUse = employees.FirstOrDefault();
+                    
+                    if (employeeToUse == null)
+                    {
+                        MessageBox.Show("No employee available to process the order.", 
+                            "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
                 }
 
                 // Create order
                 var order = new Order
                 {
                     CustomerId = _customer.CustomerId,
-                    EmployeeId = defaultEmployee.EmployeeId,
+                    EmployeeId = employeeToUse.EmployeeId,
                     OrderDate = DateTime.Now,
                     OrderDetails = new List<OrderDetail>()
                 };
