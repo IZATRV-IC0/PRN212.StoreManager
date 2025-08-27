@@ -194,7 +194,15 @@ namespace StoreManager
             _orderDetailsService = new OrderDetailsService();
             dgOrderDetail.ItemsSource = _orderDetailsService.GetAllOrderDetails().ToList();
         }
-        
+        public void LoadCategoriesToSearch()
+        {
+            _categoryService = new CategoryService();
+            var categoryNames = _categoryService.GetAllCategories().Select(c => c.CategoryName).ToList();
+            categoryNames.Insert(0, "All Categories");
+            cboxProductCategorySearch.ItemsSource = categoryNames;
+            cboxProductCategorySearch.SelectedIndex = 0;
+        }
+
         private void btn_Create_Click(object sender, RoutedEventArgs e)
         {
             if (_currentMode == ManageMode.Customer)
@@ -438,6 +446,11 @@ namespace StoreManager
             dgCategory.Visibility = Visibility.Collapsed;
             dgOrder.Visibility = Visibility.Collapsed;
             dgOrderDetail.Visibility = Visibility.Collapsed;
+            txtSearchValue.Visibility = Visibility.Visible;
+            lblSearch.Content = "Name";
+            lblSearch.Visibility = Visibility.Visible;
+            cboxProductCategorySearch.Visibility = Visibility.Collapsed;
+            btnSearch.Visibility = Visibility.Visible;
             LoadCustomerData();
         }
 
@@ -450,6 +463,11 @@ namespace StoreManager
             dgCategory.Visibility = Visibility.Collapsed;
             dgOrder.Visibility = Visibility.Collapsed;
             dgOrderDetail.Visibility = Visibility.Collapsed;
+            txtSearchValue.Visibility = Visibility.Visible;
+            lblSearch.Content = "Name";
+            lblSearch.Visibility = Visibility.Visible;
+            cboxProductCategorySearch.Visibility = Visibility.Collapsed;
+            btnSearch.Visibility = Visibility.Visible;
             LoadEmployeeData();
         }
 
@@ -462,7 +480,13 @@ namespace StoreManager
             dgCategory.Visibility = Visibility.Collapsed;
             dgOrderDetail.Visibility = Visibility.Collapsed;
             dgOrder.Visibility = Visibility.Collapsed;
+            txtSearchValue.Visibility = Visibility.Visible;
+            lblSearch.Content = "Name";
+            lblSearch.Visibility = Visibility.Visible;
+            cboxProductCategorySearch.Visibility = Visibility.Visible;
+            btnSearch.Visibility= Visibility.Visible;
             LoadProductData();
+            LoadCategoriesToSearch();
         }
 
         private void btn_Category_Click(object sender, RoutedEventArgs e)
@@ -474,6 +498,10 @@ namespace StoreManager
             dgProduct.Visibility = Visibility.Collapsed;
             dgOrderDetail.Visibility = Visibility.Collapsed;
             dgOrder.Visibility = Visibility.Collapsed;
+            txtSearchValue.Visibility = Visibility.Collapsed;
+            lblSearch.Visibility = Visibility.Collapsed;
+            cboxProductCategorySearch.Visibility = Visibility.Collapsed;
+            btnSearch.Visibility = Visibility.Collapsed;
             LoadCategoryData();
         }
 
@@ -488,6 +516,11 @@ namespace StoreManager
             dgCustomer.Visibility = Visibility.Collapsed;
             dgEmployee.Visibility = Visibility.Collapsed;
             dgProduct.Visibility = Visibility.Collapsed;
+            lblSearch.Content = "ID";
+            txtSearchValue.Visibility = Visibility.Visible;
+            lblSearch.Visibility = Visibility.Visible;
+            cboxProductCategorySearch.Visibility = Visibility.Collapsed;
+            btnSearch.Visibility = Visibility.Visible;
             LoadOrderData();
             dgOrderDetail.ItemsSource = null;
         }
@@ -499,6 +532,67 @@ namespace StoreManager
             {
                 _orderDetailsService = new OrderDetailsService();
                 dgOrderDetail.ItemsSource = _orderDetailsService.GetOrderDetailsByOrderId(selectedOrder.OrderId);
+            }
+        }
+
+        private void btn_Search_Clicked(object sender, RoutedEventArgs e)
+        {
+            switch (_currentMode)
+            {
+                case ManageMode.Product:
+                    var searchName = txtSearchValue.Text;
+                    var searchCategoryName = "";
+                    if (cboxProductCategorySearch.SelectedIndex > 0)
+                    {
+                        searchCategoryName = cboxProductCategorySearch.SelectedValue as string;
+                    }
+                    _productService = new ProductService();
+                    if (!string.IsNullOrEmpty(searchName) || !string.IsNullOrEmpty(searchCategoryName))
+                    {
+                        dgProduct.ItemsSource = _productService.SearchProductsByNameAndCategory(searchName, searchCategoryName).ToList();
+                    }
+                    else
+                    {
+                        dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
+                    }
+                    break;
+                case ManageMode.Order:
+                    var searchValue = txtSearchValue.Text;
+                    _orderService = new OrderService();
+                    if (!string.IsNullOrEmpty(searchValue))
+                    {
+                        dgOrder.ItemsSource = _orderService.SearchByOrderID(searchValue).ToList();
+                    }
+                    else
+                    {
+                        dgOrder.ItemsSource = _orderService.GetAllOrders().ToList();
+                    }
+                    break;
+                case ManageMode.Customer:
+                    searchName = txtSearchValue.Text;
+                    _customerManagementService = new CustomerManagementService();
+                    if (!string.IsNullOrEmpty(searchName))
+                    {
+                        dgCustomer.ItemsSource = _customerManagementService.SearchCustomersByName(searchName).ToList();
+                    }
+                    else
+                    {
+                        dgCustomer.ItemsSource = _customerManagementService.GetAllCustomers().ToList();
+                    }
+                    break;
+                case ManageMode.Employee:
+                    searchName = txtSearchValue.Text;
+                    _employeeManagementService = new EmployeeManagementService();
+                    if (!string.IsNullOrEmpty(searchName))
+                    {
+                        dgEmployee.ItemsSource = _employeeManagementService.SearchEmployeesByName(searchName).ToList();
+                    }
+                    else
+                    {
+                        dgEmployee.ItemsSource = _employeeManagementService.GetAllEmployees().ToList();
+                    }
+                    break;
+                    break;
             }
         }
     }

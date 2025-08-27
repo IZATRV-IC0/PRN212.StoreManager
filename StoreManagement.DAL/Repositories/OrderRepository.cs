@@ -24,6 +24,12 @@ namespace StoreManagement.DAL.Repositories
         {
             return _context.Orders.Include(o => o.Customer).Include(o => o.Employee).ToList();
         }
+        public List<Order> SearchByOrderID(string orderID)
+        {
+            return _context.Orders.Include(o => o.Customer).Include(o => o.Employee)
+                .Where(o => o.OrderId.ToString().Contains(orderID))
+                .ToList();
+        }
         public List<Order> SearchOrderByCustomer(string CustormerName, int CustomerId)
         {
             List<Order> orders = new List<Order>();
