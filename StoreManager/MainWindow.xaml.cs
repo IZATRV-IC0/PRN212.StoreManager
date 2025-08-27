@@ -80,6 +80,38 @@ namespace StoreManager
         private void LoadOrderData() =>
             dgOrder.ItemsSource = _orderService.GetAllOrders().ToList();
 
+        private void LoadCategoriesToSearch()
+        {
+            var categoryNames = _categoryService.GetAllCategories().Select(c => c.CategoryName).ToList();
+            categoryNames.Insert(0, "All Categories");
+            cboxProductCategorySearch.ItemsSource = categoryNames;
+            cboxProductCategorySearch.SelectedIndex = 0;
+        }
+
+        #endregion
+
+        #region Search Controls Management
+        private void ShowSearchControls(bool showCategory = false, string searchLabel = "Search by Name:")
+        {
+            SearchSection.Visibility = Visibility.Visible;
+            lblSearch.Visibility = Visibility.Visible;
+            txtSearchValue.Visibility = Visibility.Visible;
+            btnSearch.Visibility = Visibility.Visible;
+
+            lblSearch.Text = searchLabel;
+
+            cboxProductCategorySearch.Visibility = showCategory ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        private void HideSearchControls()
+        {
+            SearchSection.Visibility = Visibility.Collapsed;
+            lblSearch.Visibility = Visibility.Collapsed;
+            txtSearchValue.Visibility = Visibility.Collapsed;
+            btnSearch.Visibility = Visibility.Collapsed;
+            cboxProductCategorySearch.Visibility = Visibility.Collapsed;
+        }
+
         #endregion
 
         #region Sidebar Button Handlers
@@ -89,6 +121,8 @@ namespace StoreManager
             ShowOnlyDataGrid(dgCustomer);
             SetButtonVisibility(true, true, true);
             OrderDetailSection.Visibility = Visibility.Collapsed;
+            ShowSearchControls(false, "Search by Name:");
+            txtSearchValue.Clear();
             LoadCustomerData();
         }
 
@@ -98,6 +132,8 @@ namespace StoreManager
             ShowOnlyDataGrid(dgEmployee);
             SetButtonVisibility(true, true, true);
             OrderDetailSection.Visibility = Visibility.Collapsed;
+            ShowSearchControls(false, "Search by Name:");
+            txtSearchValue.Clear();
             LoadEmployeeData();
         }
 
@@ -107,7 +143,10 @@ namespace StoreManager
             ShowOnlyDataGrid(dgProduct);
             SetButtonVisibility(true, true, true);
             OrderDetailSection.Visibility = Visibility.Collapsed;
+            ShowSearchControls(true, "Search by Name:");
+            txtSearchValue.Clear();
             LoadProductData();
+            LoadCategoriesToSearch();
         }
 
         private void btn_Category_Click(object sender, RoutedEventArgs e)
@@ -116,6 +155,7 @@ namespace StoreManager
             ShowOnlyDataGrid(dgCategory);
             SetButtonVisibility(true, true, true);
             OrderDetailSection.Visibility = Visibility.Collapsed;
+            HideSearchControls();
             LoadCategoryData();
         }
 
@@ -125,6 +165,8 @@ namespace StoreManager
             ShowOnlyDataGrid(dgOrder);
             SetButtonVisibility(false, false, true);
             OrderDetailSection.Visibility = Visibility.Visible;
+            ShowSearchControls(false, "Search by ID:");
+            txtSearchValue.Clear();
             LoadOrderData();
             dgOrderDetail.ItemsSource = null;
         }
@@ -157,6 +199,86 @@ namespace StoreManager
                 dgOrderDetail.ItemsSource = _orderDetailsService.GetOrderDetailsByOrderId(selectedOrder.OrderId);
             }
         }
+
+        #region Search Functionality
+        private void btn_Search_Clicked(object sender, RoutedEventArgs e)
+        {
+            switch (_currentMode)
+            {
+                case ManageMode.Customer:
+                    SearchCustomers();
+                    break;
+                case ManageMode.Employee:
+                    SearchEmployees();
+                    break;
+                case ManageMode.Product:
+                    SearchProducts();
+                    break;
+                case ManageMode.Order:
+                    SearchOrders();
+                    break;
+            }
+        }
+
+        private void SearchCustomers()
+        {
+            var searchName = txtSearchValue.Text;
+            if (!string.IsNullOrEmpty(searchName))
+            {
+                dgCustomer.ItemsSource = _customerService.SearchCustomersByName(searchName).ToList();
+            }
+            else
+            {
+                dgCustomer.ItemsSource = _customerService.GetAllCustomers().ToList();
+            }
+        }
+
+        private void SearchEmployees()
+        {
+            var searchName = txtSearchValue.Text;
+            if (!string.IsNullOrEmpty(searchName))
+            {
+                dgEmployee.ItemsSource = _employeeService.SearchEmployeesByName(searchName).ToList();
+            }
+            else
+            {
+                dgEmployee.ItemsSource = _employeeService.GetAllEmployees().ToList();
+            }
+        }
+
+        private void SearchProducts()
+        {
+            var searchName = txtSearchValue.Text;
+            var searchCategoryName = "";
+            if (cboxProductCategorySearch.SelectedIndex > 0)
+            {
+                searchCategoryName = cboxProductCategorySearch.SelectedValue as string;
+            }
+
+            if (!string.IsNullOrEmpty(searchName) || !string.IsNullOrEmpty(searchCategoryName))
+            {
+                dgProduct.ItemsSource = _productService.SearchProductsByNameAndCategory(searchName, searchCategoryName).ToList();
+            }
+            else
+            {
+                dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
+            }
+        }
+
+        private void SearchOrders()
+        {
+            var searchValue = txtSearchValue.Text;
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                dgOrder.ItemsSource = _orderService.SearchByOrderID(searchValue).ToList();
+            }
+            else
+            {
+                dgOrder.ItemsSource = _orderService.GetAllOrders().ToList();
+            }
+        }
+
+        #endregion
 
         #region CRUD Operations
         private void btn_Create_Click(object sender, RoutedEventArgs e)

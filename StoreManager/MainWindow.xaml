@@ -51,6 +51,11 @@
             <GradientStop Color="#c0392b" Offset="1"/>
         </LinearGradientBrush>
 
+        <LinearGradientBrush x:Key="SearchButtonBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#4facfe" Offset="0"/>
+            <GradientStop Color="#00f2fe" Offset="1"/>
+        </LinearGradientBrush>
+
         <!-- Modern Button Style -->
         <Style x:Key="ModernButtonStyle" TargetType="Button">
             <Setter Property="FontSize" Value="14"/>
@@ -169,6 +174,112 @@
             <Setter Property="Foreground" Value="#555"/>
             <Setter Property="Margin" Value="20,5"/>
         </Style>
+
+        <!-- Modern TextBox Style -->
+        <Style x:Key="ModernTextBoxStyle" TargetType="TextBox">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="15,10"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="#E0E6ED"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="12"
+                                x:Name="border">
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                          VerticalAlignment="Stretch"
+                                          Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#667eea"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern ComboBox Style -->
+        <Style x:Key="ModernComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="15,10"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="#E0E6ED"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton Name="ToggleButton" 
+                                          BorderBrush="{TemplateBinding BorderBrush}"
+                                          BorderThickness="{TemplateBinding BorderThickness}"
+                                          Background="{TemplateBinding Background}"
+                                          Focusable="false"
+                                          IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                          ClickMode="Press">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border Background="{TemplateBinding Background}" 
+                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                CornerRadius="12">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition Width="20"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Path x:Name="Arrow" Grid.Column="1" 
+                                                      Fill="#666"
+                                                      HorizontalAlignment="Center" 
+                                                      VerticalAlignment="Center"
+                                                      Data="M 0 0 L 4 4 L 8 0 Z"/>
+                                            </Grid>
+                                        </Border>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+                            <ContentPresenter Name="ContentSite"
+                                              IsHitTestVisible="False" 
+                                              Content="{TemplateBinding SelectionBoxItem}"
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                              Margin="15,10"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Left"/>
+                            <Popup Name="Popup"
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True" 
+                                   Focusable="False"
+                                   PopupAnimation="Slide">
+                                <Grid Name="DropDown"
+                                      SnapsToDevicePixels="True"
+                                      MinWidth="{TemplateBinding ActualWidth}"
+                                      MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="DropDownBorder"
+                                            Background="White"
+                                            BorderThickness="1"
+                                            BorderBrush="#E0E6ED"
+                                            CornerRadius="12"/>
+                                    <ScrollViewer Margin="4,6,4,6" 
+                                                  SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True" 
+                                                    KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <!-- Main Container -->
@@ -236,6 +347,7 @@
         <Grid Grid.Column="1" Margin="20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -250,8 +362,40 @@
                 </StackPanel>
             </Border>
 
+            <!-- Search Controls -->
+            <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,10"
+                    x:Name="SearchSection" Visibility="Collapsed">
+                <StackPanel Orientation="Horizontal" Margin="20,15" HorizontalAlignment="Right">
+                    <!-- Category ComboBox (for Product search) -->
+                    <ComboBox x:Name="cboxProductCategorySearch" 
+                              Style="{StaticResource ModernComboBoxStyle}"
+                              Width="180" Height="45" Margin="0,0,10,0"
+                              Visibility="Collapsed"/>
+
+                    <!-- Search Label and TextBox -->
+                    <TextBlock x:Name="lblSearch" Text="Search by Name:" 
+                               FontSize="14" FontWeight="SemiBold" 
+                               Foreground="#555" VerticalAlignment="Center" 
+                               Margin="0,0,10,0" Visibility="Collapsed"/>
+
+                    <TextBox x:Name="txtSearchValue" 
+                             Style="{StaticResource ModernTextBoxStyle}"
+                             Width="200" Height="60" 
+                             Margin="0,0,10,0"
+                             Visibility="Collapsed"/>
+
+                    <!-- Search Button -->
+                    <Button x:Name="btnSearch" Content="🔍 Search" 
+                            Style="{StaticResource ModernButtonStyle}"
+                            Background="{StaticResource SearchButtonBrush}"
+                            Width="120" Height="45"
+                            Visibility="Collapsed"
+                            Click="btn_Search_Clicked"/>
+                </StackPanel>
+            </Border>
+
             <!-- Main Data Display Area -->
-            <Border Grid.Row="1" Style="{StaticResource CardStyle}">
+            <Border Grid.Row="2" Style="{StaticResource CardStyle}">
                 <Grid Margin="20">
                     <!-- Customer DataGrid -->
                     <DataGrid x:Name="dgCustomer" Style="{StaticResource ModernDataGridStyle}" 
@@ -324,7 +468,7 @@
             </Border>
 
             <!-- Order Detail Section (Only visible when Order is selected) -->
-            <Border Grid.Row="2" Style="{StaticResource CardStyle}" x:Name="OrderDetailSection" 
+            <Border Grid.Row="3" Style="{StaticResource CardStyle}" x:Name="OrderDetailSection" 
                     Visibility="Collapsed" Height="200">
                 <Grid Margin="20">
                     <TextBlock Text="📋 Order Details" Style="{StaticResource SubHeaderStyle}" Margin="0,0,0,10"/>
@@ -343,7 +487,7 @@
             </Border>
 
             <!-- Action Buttons -->
-            <Border Grid.Row="3" Style="{StaticResource CardStyle}">
+            <Border Grid.Row="4" Style="{StaticResource CardStyle}">
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20,15">
                     <Button x:Name="btn_Create" Content="➕ Create" 
                             Style="{StaticResource ModernButtonStyle}"
