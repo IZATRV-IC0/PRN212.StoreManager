@@ -374,6 +374,8 @@ namespace StoreManager
             lblSearch.Visibility = Visibility.Visible;
             cboxProductCategorySearch.Visibility = Visibility.Collapsed;
             btnSearch.Visibility = Visibility.Visible;
+            btn_Create.Visibility = Visibility.Visible;
+            btn_Delete.Visibility = Visibility.Visible;
             LoadCustomerData();
         }
 
@@ -391,6 +393,8 @@ namespace StoreManager
             lblSearch.Visibility = Visibility.Visible;
             cboxProductCategorySearch.Visibility = Visibility.Collapsed;
             btnSearch.Visibility = Visibility.Visible;
+            btn_Create.Visibility = Visibility.Visible;
+            btn_Delete.Visibility = Visibility.Visible;
             LoadEmployeeData();
         }
 
@@ -408,6 +412,8 @@ namespace StoreManager
             lblSearch.Visibility = Visibility.Visible;
             cboxProductCategorySearch.Visibility = Visibility.Visible;
             btnSearch.Visibility = Visibility.Visible;
+            btn_Create.Visibility = Visibility.Visible;
+            btn_Delete.Visibility = Visibility.Visible;
             LoadProductData();
             LoadCategoriesToSearch();
         }
@@ -425,6 +431,8 @@ namespace StoreManager
             lblSearch.Visibility = Visibility.Collapsed;
             cboxProductCategorySearch.Visibility = Visibility.Collapsed;
             btnSearch.Visibility = Visibility.Collapsed;
+            btn_Create.Visibility = Visibility.Visible;
+            btn_Delete.Visibility = Visibility.Visible;
             LoadCategoryData();
         }
 
