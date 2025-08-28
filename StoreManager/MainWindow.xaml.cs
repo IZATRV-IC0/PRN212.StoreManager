@@ -66,6 +66,15 @@ namespace StoreManager
             new LoginWindow().Show();
             this.Close();
         }
+        public void disableStaffFeatures()
+        {
+            btn_CustomerMenu.IsEnabled = false;
+            btn_EmployeeMenu.IsEnabled = false;
+            btn_Category.IsEnabled = false;
+            btn_CustomerMenu.Foreground = System.Windows.Media.Brushes.Gray;
+            btn_EmployeeMenu.Foreground = System.Windows.Media.Brushes.Gray;
+            btn_Category.Foreground = System.Windows.Media.Brushes.Gray;
+        }
 
         #region Load Data Methods
         private void LoadCustomerData() =>

@@ -51,17 +51,11 @@ namespace StoreManager
                         adminDashboard.Show();
                         this.Close();
                         break;
-                    case 2:
-                        //Manager role
-                        MainWindow managerDashboard = new MainWindow(employee);
-                        MessageBox.Show("Welcome, Manager!", "Login Successful", MessageBoxButton.OK, MessageBoxImage.Information);
-                        managerDashboard.Show();
-                        this.Close();
-                        break;
                     case 3:
                         //Staff role
                         MainWindow staffDashboard = new MainWindow(employee);
                         MessageBox.Show("Welcome, Staff!", "Login Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                        staffDashboard.disableStaffFeatures();
                         staffDashboard.Show();
                         this.Close();
                         break;
