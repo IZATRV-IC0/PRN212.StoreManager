@@ -142,11 +142,8 @@ namespace StoreManager
                         break;
                         
                     case 2: // Staff - can create, update, delete customers
+                    case 3: // Staff - can create, update, delete customers
                         SetButtonVisibility(true, true, true);
-                        break;
-                        
-                    case 3: // Junior Staff - can only view and create customers
-                        SetButtonVisibility(true, false, false);
                         break;
                         
                     default:
@@ -195,10 +192,7 @@ namespace StoreManager
                         break;
                         
                     case 2: // Staff - can only view products (read-only)
-                        SetButtonVisibility(false, false, false);
-                        break;
-                        
-                    case 3: // Junior Staff - no access (should not reach here)
+                    case 3: // Staff - can only view products (read-only)
                         SetButtonVisibility(false, false, false);
                         break;
                         
@@ -248,11 +242,8 @@ namespace StoreManager
                         break;
                         
                     case 2: // Staff - can create and update orders
+                    case 3: // Staff - can create and update orders
                         SetButtonVisibility(true, false, true);
-                        break;
-                        
-                    case 3: // Junior Staff - can only view orders
-                        SetButtonVisibility(false, false, false);
                         break;
                         
                     default:
@@ -371,7 +362,7 @@ namespace StoreManager
         {
             if (_currentMode == ManageMode.Customer)
             {
-                // Check permissions for customer creation
+                // Check permissions for customer creation (Admin and Staff)
                 if (_employee != null && ((_employee.RoleNum ?? 0) == 1 || (_employee.RoleNum ?? 0) == 2 || (_employee.RoleNum ?? 0) == 3))
                 {
                     ManageCustomerWindow manageCustomerWindow = new();
@@ -439,8 +430,8 @@ namespace StoreManager
             }
             else if (_currentMode == ManageMode.Order)
             {
-                // Only Staff (RoleNum = 2) can create new orders
-                if (_employee != null && (_employee.RoleNum ?? 0) == 2)
+                // Only Staff (RoleNum = 2 or 3) can create new orders
+                if (_employee != null && ((_employee.RoleNum ?? 0) == 2 || (_employee.RoleNum ?? 0) == 3))
                 {
                     CreateNewOrderWindow createOrderWindow = new CreateNewOrderWindow(_employee);
                     createOrderWindow.ShowDialog();
@@ -459,8 +450,8 @@ namespace StoreManager
         {
             if (_currentMode == ManageMode.Customer)
             {
-                // Check permissions for customer update
-                if (_employee != null && ((_employee.RoleNum ?? 0) == 1 || (_employee.RoleNum ?? 0) == 2))
+                // Check permissions for customer update (Admin and Staff)
+                if (_employee != null && ((_employee.RoleNum ?? 0) == 1 || (_employee.RoleNum ?? 0) == 2 || (_employee.RoleNum ?? 0) == 3))
                 {
                     Customer selectedCustomer = dgCustomer.SelectedItem as Customer;
                     if (selectedCustomer != null)
@@ -563,14 +554,14 @@ namespace StoreManager
             }
             else if (_currentMode == ManageMode.Order)
             {
-                // Check permissions for order update
-                if (_employee != null && ((_employee.RoleNum ?? 0) == 1 || (_employee.RoleNum ?? 0) == 2))
+                // Check permissions for order update (Admin and Staff)
+                if (_employee != null && ((_employee.RoleNum ?? 0) == 1 || (_employee.RoleNum ?? 0) == 2 || (_employee.RoleNum ?? 0) == 3))
                 {
                     Order selectedOrder = dgOrder.SelectedItem as Order;
                     if (selectedOrder != null)
                     {
                         // Staff can only update their own orders
-                        if ((_employee.RoleNum ?? 0) == 2 && selectedOrder.EmployeeId != _employee.EmployeeId)
+                        if (((_employee.RoleNum ?? 0) == 2 || (_employee.RoleNum ?? 0) == 3) && selectedOrder.EmployeeId != _employee.EmployeeId)
                         {
                             MessageBox.Show("You can only update orders created by yourself.", "Access Denied", 
                                 MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -739,8 +730,7 @@ namespace StoreManager
             return roleNum switch
             {
                 1 => "ADMIN",
-                2 => "STAFF",
-                3 => "JUNIOR STAFF",
+                2 or 3 => "STAFF", // Gộp Staff và Junior Staff thành STAFF
                 _ => "UNKNOWN"
             };
         }
@@ -755,17 +745,14 @@ namespace StoreManager
                         // No restrictions
                         break;
                         
-                    case 2: // Staff - Limited access
+                    case 2: // Staff - Limited access  
+                    case 3: // Staff (formerly Junior Staff) - Same as regular staff
                         ConfigureStaffPermissions();
-                        break;
-                        
-                    case 3: // Junior Staff - Very limited access
-                        ConfigureJuniorStaffPermissions();
                         break;
                         
                     default:
                         // Unknown role - minimal access
-                        ConfigureJuniorStaffPermissions();
+                        ConfigureStaffPermissions(); // Give staff permissions as default
                         break;
                 }
             }
@@ -781,16 +768,7 @@ namespace StoreManager
             btn_CustomerMenu_Click(null, null);
         }
 
-        private void ConfigureJuniorStaffPermissions()
-        {
-            // Hide most sidebar buttons for Junior Staff
-            btn_EmployeeMenu.Visibility = Visibility.Collapsed;
-            btn_Category.Visibility = Visibility.Collapsed;
-            btn_Product.Visibility = Visibility.Collapsed; // Junior staff can't even view products
-            
-            // Set default view to customers (only allowed function)
-            btn_CustomerMenu_Click(null, null);
-        }
+
 
         private void LoadOrderDataForStaff()
         {
@@ -801,7 +779,7 @@ namespace StoreManager
                     break;
                     
                 case 2: // Staff - only see their own orders
-                case 3: // Junior Staff - only see their own orders
+                case 3: // Staff - only see their own orders  
                     dgOrder.ItemsSource = _orderService.GetOrdersByEmployee(_employee.EmployeeId).ToList();
                     break;
                     
@@ -831,7 +809,7 @@ namespace StoreManager
                     break;
                     
                 case 2: // Staff - only search in their own orders
-                case 3: // Junior Staff - only search in their own orders
+                case 3: // Staff - only search in their own orders
                     if (!string.IsNullOrEmpty(searchCustomerName))
                     {
                         var staffOrders = _orderService.GetOrdersByEmployee(_employee.EmployeeId);
