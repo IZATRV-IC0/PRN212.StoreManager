@@ -59,7 +59,8 @@ namespace StoreManager
         }
 
         private void btn_Logout_Click(object sender, RoutedEventArgs e)
-        {
+        {            
+            if (MessageBox.Show("Are you sure you want to logout?", "Confirm Logout", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No) return;
             new LoginWindow().Show();
             this.Close();
         }
