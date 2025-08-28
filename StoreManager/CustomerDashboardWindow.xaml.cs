@@ -69,6 +69,7 @@ namespace StoreManager
         {
             int cartCount = ShoppingCartService.Instance.GetTotalItems();
             btnPlaceOrder.Content = $"📦 Place Order ({cartCount})";
+            btnPlaceOrderCard.Content = $"📦 Place Order ({cartCount})";
         }
 
         protected override void OnClosed(EventArgs e)

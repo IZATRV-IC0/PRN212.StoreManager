@@ -5,121 +5,334 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StoreManager"
         mc:Ignorable="d"
-
-        Title="Customer Dashboard" Height="600" Width="1000" 
-        WindowStartupLocation="CenterScreen">
+        Title="Customer Dashboard" Height="900" Width="1400" 
+        ResizeMode="CanResize" WindowStartupLocation="CenterScreen"
+        AllowsTransparency="False" WindowStyle="SingleBorderWindow">
 
     <Window.Resources>
-        <!-- Button Style -->
-        <Style x:Key="MenuButtonStyle" TargetType="Button">
-            <Setter Property="FontSize" Value="16"/>
-            <Setter Property="FontWeight" Value="Medium"/>
-            <Setter Property="Height" Value="50"/>
-            <Setter Property="Margin" Value="10,5"/>
-            <Setter Property="Background" Value="#4A90E2"/>
+        <!-- Gradient Brushes -->
+        <LinearGradientBrush x:Key="MainBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#f8f9ff" Offset="0"/>
+            <GradientStop Color="#e6e9ff" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="SidebarBrush" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#667eea" Offset="0"/>
+            <GradientStop Color="#764ba2" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="CardBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#ffffff" Offset="0"/>
+            <GradientStop Color="#f8f9ff" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="PrimaryButtonBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#667eea" Offset="0"/>
+            <GradientStop Color="#764ba2" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="SecondaryButtonBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#f093fb" Offset="0"/>
+            <GradientStop Color="#f5576c" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="SuccessButtonBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#56ab2f" Offset="0"/>
+            <GradientStop Color="#a8e6cf" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="WarningButtonBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#f7971e" Offset="0"/>
+            <GradientStop Color="#ffd200" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="DangerButtonBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#e74c3c" Offset="0"/>
+            <GradientStop Color="#c0392b" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="InfoButtonBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#4facfe" Offset="0"/>
+            <GradientStop Color="#00f2fe" Offset="1"/>
+        </LinearGradientBrush>
+
+        <!-- Modern Button Style -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="45"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="5"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" 
-                                CornerRadius="5">
+                                CornerRadius="22"
+                                x:Name="border">
                             <ContentPresenter HorizontalAlignment="Center" 
                                               VerticalAlignment="Center"/>
                         </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.02" ScaleY="1.02"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" Opacity="0.2" BlurRadius="8"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Style.Triggers>
+        </Style>
+
+        <!-- Large Menu Button Style -->
+        <Style x:Key="LargeMenuButtonStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="120"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="15"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="25"
+                                x:Name="border">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.03" ScaleY="1.03"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="Black" Direction="270" ShadowDepth="5" Opacity="0.3" BlurRadius="15"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Sidebar Button Style -->
+        <Style x:Key="SidebarButtonStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Height" Value="50"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="20,0"/>
+            <Setter Property="Margin" Value="10,5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="25"
+                                x:Name="border">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#357ABD"/>
+                                <Setter TargetName="border" Property="Background" Value="#30ffffff"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#20ffffff"/>
                 </Trigger>
-            </Style.Triggers>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Card Style -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBackgroundBrush}"/>
+            <Setter Property="CornerRadius" Value="20"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="5" 
+                                      Opacity="0.1" BlurRadius="20"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Header Style -->
+        <Style x:Key="HeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="Margin" Value="20,10"/>
+        </Style>
+
+        <!-- Subheader Style -->
+        <Style x:Key="SubHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#555"/>
+            <Setter Property="Margin" Value="20,5"/>
         </Style>
     </Window.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="60"/>
-        </Grid.RowDefinitions>
+    <!-- Main Container -->
+    <Grid Background="{StaticResource MainBackgroundBrush}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="280"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
-        <!-- Header -->
-        <Border Grid.Row="0" Background="#2C3E50">
-            <Grid>
-                <Label x:Name="lblRole" Content="Customer Dashboard" 
-                       HorizontalAlignment="Center" VerticalAlignment="Center" 
-                       FontSize="32" FontWeight="Bold" Foreground="White"/>
-                <Label x:Name="lblUserInfo" Content="" 
-                       HorizontalAlignment="Right" VerticalAlignment="Center" 
-                       FontSize="14" Foreground="White" Margin="0,0,20,0"/>
-            </Grid>
+        <!-- Sidebar -->
+        <Border Grid.Column="0" Background="{StaticResource SidebarBrush}">
+            <Border.Effect>
+                <DropShadowEffect Color="Black" Direction="0" ShadowDepth="5" 
+                                  Opacity="0.2" BlurRadius="15"/>
+            </Border.Effect>
+
+            <StackPanel Margin="0,20">
+                <!-- Logo/Header -->
+                <Border Background="#30ffffff" CornerRadius="20" Margin="20,0,20,20" Padding="20">
+                    <StackPanel>
+                        <Ellipse Width="60" Height="60" Fill="White" HorizontalAlignment="Center"/>
+                        <TextBlock Text="🛒" FontSize="30" HorizontalAlignment="Center" 
+                                   VerticalAlignment="Center" Margin="0,-45,0,0"/>
+                        <TextBlock x:Name="lblRole" Text="CUSTOMER" FontSize="20" FontWeight="Bold" 
+                                   Foreground="White" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                        <TextBlock x:Name="lblUserInfo" Text="Welcome Customer!" 
+                                   FontSize="14" Foreground="#E0E0E0" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Navigation Menu -->
+                <StackPanel Margin="0,20,0,0">
+                    <Button x:Name="btnViewProducts" Content="🛒 View Products" 
+                            Style="{StaticResource SidebarButtonStyle}" 
+                            Click="btnViewProducts_Click"/>
+
+                    <Button x:Name="btnPlaceOrder" Content="📦 Place Order (0)" 
+                            Style="{StaticResource SidebarButtonStyle}" 
+                            Click="btnPlaceOrder_Click"/>
+
+                    <Button x:Name="btnOrderHistory" Content="📋 Order History" 
+                            Style="{StaticResource SidebarButtonStyle}" 
+                            Click="btnOrderHistory_Click"/>
+
+                    <Button x:Name="btnMyProfile" Content="👤 My Profile" 
+                            Style="{StaticResource SidebarButtonStyle}" 
+                            Click="btnMyProfile_Click"/>
+                </StackPanel>
+
+                <!-- Logout Button at Bottom -->
+                <Button x:Name="btn_Logout" Content="🚪 Logout" 
+                        Style="{StaticResource SidebarButtonStyle}"
+                        Background="#30ff0000" 
+                        VerticalAlignment="Bottom" 
+                        Margin="10,50,10,20"
+                        Click="btn_Logout_Click"/>
+            </StackPanel>
         </Border>
 
-        <!-- Main Content -->
-        <Grid Grid.Row="1" Margin="20">
-            <StackPanel x:Name="pnlCustomerMenu">
-                <TextBlock Text="Customer Dashboard" FontSize="24" FontWeight="Bold" 
-                           Margin="0,0,0,30" HorizontalAlignment="Center"/>
+        <!-- Main Content Area -->
+        <Grid Grid.Column="1" Margin="20">
+        <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-                <Grid>
+            <!-- Content Header -->
+            <Border Grid.Row="0" Style="{StaticResource CardStyle}" Margin="0,0,0,10">
+                <StackPanel Orientation="Horizontal" Margin="20,15">
+                    <TextBlock Text="🛒 Customer Dashboard" Style="{StaticResource HeaderStyle}" Margin="0"/>
+                    <TextBlock Text="Shop and manage your orders" Style="{StaticResource SubHeaderStyle}" 
+                               VerticalAlignment="Bottom" Margin="20,0,0,5"/>
+                </StackPanel>
+        </Border>
+
+            <!-- Main Dashboard Cards -->
+            <Border Grid.Row="1" Style="{StaticResource CardStyle}">
+                <Grid Margin="40">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel Grid.Column="0" Margin="20,0">
-                        <Button Name="btnViewProducts" Content="🛒 View Products" 
-                                Style="{StaticResource MenuButtonStyle}"
-                                Height="80" FontSize="18"
+                    <!-- View Products Card -->
+                    <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardStyle}" 
+                            Background="{StaticResource CardBackgroundBrush}" Margin="10">
+                        <Button Content="🛒 View Products" 
+                                Style="{StaticResource LargeMenuButtonStyle}"
+                                Background="{StaticResource PrimaryButtonBrush}"
                                 Click="btnViewProducts_Click"/>
+                    </Border>
 
-                        <Button Name="btnPlaceOrder" Content="📦 Place Order (0)" 
-                                Style="{StaticResource MenuButtonStyle}"
-                                Height="80" FontSize="18"
-                                Background="#5CB85C"
+                    <!-- Place Order Card -->
+                    <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CardStyle}" 
+                            Background="{StaticResource CardBackgroundBrush}" Margin="10">
+                        <Button Name="btnPlaceOrderCard" Content="📦 Place Order (0)" 
+                                Style="{StaticResource LargeMenuButtonStyle}"
+                                Background="{StaticResource SuccessButtonBrush}"
                                 Click="btnPlaceOrder_Click"/>
-                    </StackPanel>
+                    </Border>
 
-                    <StackPanel Grid.Column="1" Margin="20,0">
-                        <Button Name="btnOrderHistory" Content="📋 Order History" 
-                                Style="{StaticResource MenuButtonStyle}"
-                                Height="80" FontSize="18"
-                                Background="#F0AD4E"
+                    <!-- Order History Card -->
+                    <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CardStyle}" 
+                            Background="{StaticResource CardBackgroundBrush}" Margin="10">
+                        <Button Content="📋 Order History" 
+                                Style="{StaticResource LargeMenuButtonStyle}"
+                                Background="{StaticResource WarningButtonBrush}"
                                 Click="btnOrderHistory_Click"/>
+                    </Border>
 
-                        <Button Name="btnMyProfile" Content="👤 My Profile" 
-                                Style="{StaticResource MenuButtonStyle}"
-                                Height="80" FontSize="18"
-                                Background="#5BC0DE"
+                    <!-- My Profile Card -->
+                    <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CardStyle}" 
+                            Background="{StaticResource CardBackgroundBrush}" Margin="10">
+                        <Button Content="👤 My Profile" 
+                                Style="{StaticResource LargeMenuButtonStyle}"
+                                Background="{StaticResource InfoButtonBrush}"
                                 Click="btnMyProfile_Click"/>
-                    </StackPanel>
-                </Grid>
-            </StackPanel>
-        </Grid>
-
-        <!-- Footer -->
-        <Border Grid.Row="2" Background="#ECF0F1">
-            <Grid>
-                <Button x:Name="btn_Logout" Content="🚪 Logout" 
-                        HorizontalAlignment="Right" Margin="0,0,20,0" 
-                        VerticalAlignment="Center" Width="120" Height="40"
-                        Background="#E74C3C" Foreground="White"
-                        FontWeight="Bold" BorderThickness="0"
-                        Cursor="Hand" Click="btn_Logout_Click">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}" 
-                                    CornerRadius="5">
-                                <ContentPresenter HorizontalAlignment="Center" 
-                                                  VerticalAlignment="Center"/>
                             </Border>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
             </Grid>
         </Border>
+        </Grid>
+
+        <!-- Decorative Elements -->
+        <Ellipse Width="100" Height="100" 
+                 Fill="#10667eea" 
+                 HorizontalAlignment="Right" VerticalAlignment="Top"
+                 Margin="0,-50,-50,0" Grid.Column="1"/>
+
+        <Rectangle Width="200" Height="200" 
+                   Fill="#05f093fb" 
+                   HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                   Margin="0,0,-100,-100" Grid.Column="1">
+            <Rectangle.RenderTransform>
+                <RotateTransform Angle="45"/>
+            </Rectangle.RenderTransform>
+        </Rectangle>
     </Grid>
 </Window>
