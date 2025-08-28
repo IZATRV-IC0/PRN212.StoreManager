@@ -46,8 +46,11 @@ namespace StoreManager
             _orderDetailsService = new OrderDetailsService();
 
             // Display employee information
-            lblRole.Text = _employee.RoleNum == 1 ? "ADMIN" : "STAFF";
+            lblRole.Text = GetRoleName(_employee.RoleNum ?? 0);
             lbl_NameGreeting.Text = $"Welcome, {_employee.Name}!";
+            
+            // Configure UI based on role
+            ConfigureUIForRole();
         }
 
         public MainWindow(Customer customer)
@@ -64,15 +67,7 @@ namespace StoreManager
             new LoginWindow().Show();
             this.Close();
         }
-        public void disableStaffFeatures()
-        {
-            btn_CustomerMenu.IsEnabled = false;
-            btn_EmployeeMenu.IsEnabled = false;
-            btn_Category.IsEnabled = false;
-            btn_CustomerMenu.Foreground = System.Windows.Media.Brushes.Gray;
-            btn_EmployeeMenu.Foreground = System.Windows.Media.Brushes.Gray;
-            btn_Category.Foreground = System.Windows.Media.Brushes.Gray;
-        }
+
 
         #region Load Data Methods
         private void LoadCustomerData() =>
@@ -87,8 +82,7 @@ namespace StoreManager
         private void LoadCategoryData() =>
             dgCategory.ItemsSource = _categoryService.GetAllCategories().ToList();
 
-        private void LoadOrderData() =>
-            dgOrder.ItemsSource = _orderService.GetAllOrders().ToList();
+        private void LoadOrderData() => LoadOrderDataForStaff();
 
         private void LoadCategoriesToSearch()
         {
@@ -137,7 +131,27 @@ namespace StoreManager
         {
             _currentMode = ManageMode.Customer;
             ShowOnlyDataGrid(dgCustomer);
-            SetButtonVisibility(true, true, true);
+            
+            // Configure buttons based on role
+            if (_employee != null)
+            {
+                switch (_employee.RoleNum ?? 0)
+                {
+                    case 1: // Admin - full access
+                        SetButtonVisibility(true, true, true);
+                        break;
+                        
+                    case 2: // Staff - can create, update, delete customers
+                    case 3: // Staff - can create, update, delete customers
+                        SetButtonVisibility(true, true, true);
+                        break;
+                        
+                    default:
+                        SetButtonVisibility(false, false, false);
+                        break;
+                }
+            }
+            
             OrderDetailSection.Visibility = Visibility.Collapsed;
             ShowSearchControls(false, "Search by Name:");
             txtSearchValue.Clear();
@@ -146,6 +160,14 @@ namespace StoreManager
 
         private void btn_EmployeeMenu_Click(object sender, RoutedEventArgs e)
         {
+            // Only Admin can access Employee Management
+            if (_employee != null && (_employee.RoleNum ?? 0) != 1)
+            {
+                MessageBox.Show("You don't have permission to access Employee Management.", "Access Denied", 
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            
             _currentMode = ManageMode.Employee;
             ShowOnlyDataGrid(dgEmployee);
             SetButtonVisibility(true, true, true);
@@ -159,7 +181,27 @@ namespace StoreManager
         {
             _currentMode = ManageMode.Product;
             ShowOnlyDataGrid(dgProduct);
-            SetButtonVisibility(true, true, true);
+            
+            // Configure buttons based on role
+            if (_employee != null)
+            {
+                switch (_employee.RoleNum ?? 0)
+                {
+                    case 1: // Admin - full access
+                        SetButtonVisibility(true, true, true);
+                        break;
+                        
+                    case 2: // Staff - can only view products (read-only)
+                    case 3: // Staff - can only view products (read-only)
+                        SetButtonVisibility(false, false, false);
+                        break;
+                        
+                    default:
+                        SetButtonVisibility(false, false, false);
+                        break;
+                }
+            }
+            
             OrderDetailSection.Visibility = Visibility.Collapsed;
             ShowSearchControls(true, "Search by Name:");
             txtSearchValue.Clear();
@@ -169,6 +211,14 @@ namespace StoreManager
 
         private void btn_Category_Click(object sender, RoutedEventArgs e)
         {
+            // Only Admin can access Category Management
+            if (_employee != null && (_employee.RoleNum ?? 0) != 1)
+            {
+                MessageBox.Show("You don't have permission to access Category Management.", "Access Denied", 
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            
             _currentMode = ManageMode.Category;
             ShowOnlyDataGrid(dgCategory);
             SetButtonVisibility(true, true, true);
@@ -181,7 +231,27 @@ namespace StoreManager
         {
             _currentMode = ManageMode.Order;
             ShowOnlyDataGrid(dgOrder);
-            SetButtonVisibility(false, false, true);
+            
+            // Configure buttons based on role
+            if (_employee != null)
+            {
+                switch (_employee.RoleNum ?? 0)
+                {
+                    case 1: // Admin
+                        SetButtonVisibility(false, false, true); // Default admin behavior
+                        break;
+                        
+                    case 2: // Staff - can create and update orders
+                    case 3: // Staff - can create and update orders
+                        SetButtonVisibility(true, false, true);
+                        break;
+                        
+                    default:
+                        SetButtonVisibility(false, false, false);
+                        break;
+                }
+            }
+            
             OrderDetailSection.Visibility = Visibility.Visible;
             ShowSearchControls(false, "& Customer Name:");
             txtSearchValue.Clear();
@@ -283,19 +353,7 @@ namespace StoreManager
             }
         }
 
-        private void SearchOrders()
-        {
-            var searchCustomerName = txtSearchValue.Text;
-            var searchEmployeeName = txtEmployeeNameSearchValue.Text;
-            if (!string.IsNullOrEmpty(searchCustomerName) || !string.IsNullOrEmpty(searchEmployeeName))
-            {
-                dgOrder.ItemsSource = _orderService.SearchOrderByEmployeeAndCustomer(searchEmployeeName, searchCustomerName).ToList();
-            }
-            else
-            {
-                dgOrder.ItemsSource = _orderService.GetAllOrders().ToList();
-            }
-        }
+        private void SearchOrders() => SearchOrdersForStaff();
 
         #endregion
 
@@ -304,35 +362,87 @@ namespace StoreManager
         {
             if (_currentMode == ManageMode.Customer)
             {
-                ManageCustomerWindow manageCustomerWindow = new();
-                manageCustomerWindow.lblEditor.Text = "Create New Customer";
-                manageCustomerWindow.ShowDialog();
-                dgCustomer.ItemsSource = null;
-                dgCustomer.ItemsSource = _customerService.GetAllCustomers().ToList();
+                // Check permissions for customer creation (Admin and Staff)
+                if (_employee != null && ((_employee.RoleNum ?? 0) == 1 || (_employee.RoleNum ?? 0) == 2 || (_employee.RoleNum ?? 0) == 3))
+                {
+                    ManageCustomerWindow manageCustomerWindow = new();
+                    manageCustomerWindow.lblEditor.Text = "Create New Customer";
+                    manageCustomerWindow.ShowDialog();
+                    dgCustomer.ItemsSource = null;
+                    dgCustomer.ItemsSource = _customerService.GetAllCustomers().ToList();
+                }
+                else
+                {
+                    MessageBox.Show("You don't have permission to create customers.", "Access Denied", 
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
             else if (_currentMode == ManageMode.Employee)
             {
-                ManageEmployeeWindow manageEmployeeWindow = new();
-                manageEmployeeWindow.lblEditor.Text = "Create New Employee";
-                manageEmployeeWindow.ShowDialog();
-                dgEmployee.ItemsSource = null;
-                dgEmployee.ItemsSource = _employeeService.GetAllEmployees().ToList();
+                // Only Admin can create employees
+                if (_employee != null && (_employee.RoleNum ?? 0) == 1)
+                {
+                    ManageEmployeeWindow manageEmployeeWindow = new();
+                    manageEmployeeWindow.lblEditor.Text = "Create New Employee";
+                    manageEmployeeWindow.ShowDialog();
+                    dgEmployee.ItemsSource = null;
+                    dgEmployee.ItemsSource = _employeeService.GetAllEmployees().ToList();
+                }
+                else
+                {
+                    MessageBox.Show("You don't have permission to create employees.", "Access Denied", 
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
             else if (_currentMode == ManageMode.Product)
             {
-                ManageProductWindow manageProductWindow = new();
-                manageProductWindow.lblEditor.Text = "Create New Product";
-                manageProductWindow.ShowDialog();
-                dgProduct.ItemsSource = null;
-                dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
+                // Only Admin can create products
+                if (_employee != null && (_employee.RoleNum ?? 0) == 1)
+                {
+                    ManageProductWindow manageProductWindow = new();
+                    manageProductWindow.lblEditor.Text = "Create New Product";
+                    manageProductWindow.ShowDialog();
+                    dgProduct.ItemsSource = null;
+                    dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
+                }
+                else
+                {
+                    MessageBox.Show("You don't have permission to create products.", "Access Denied", 
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
             else if (_currentMode == ManageMode.Category)
             {
-                ManageCategoryWindow manageCategoryWindow = new();
-                manageCategoryWindow.lblEditor.Text = "Create New Category";
-                manageCategoryWindow.ShowDialog();
-                dgCategory.ItemsSource = null;
-                dgCategory.ItemsSource = _categoryService.GetAllCategories().ToList();
+                // Only Admin can create categories
+                if (_employee != null && (_employee.RoleNum ?? 0) == 1)
+                {
+                    ManageCategoryWindow manageCategoryWindow = new();
+                    manageCategoryWindow.lblEditor.Text = "Create New Category";
+                    manageCategoryWindow.ShowDialog();
+                    dgCategory.ItemsSource = null;
+                    dgCategory.ItemsSource = _categoryService.GetAllCategories().ToList();
+                }
+                else
+                {
+                    MessageBox.Show("You don't have permission to create categories.", "Access Denied", 
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else if (_currentMode == ManageMode.Order)
+            {
+                // Only Staff (RoleNum = 2 or 3) can create new orders
+                if (_employee != null && ((_employee.RoleNum ?? 0) == 2 || (_employee.RoleNum ?? 0) == 3))
+                {
+                    CreateNewOrderWindow createOrderWindow = new CreateNewOrderWindow(_employee);
+                    createOrderWindow.ShowDialog();
+                    LoadOrderData();
+                    dgOrderDetail.ItemsSource = null;
+                }
+                else
+                {
+                    MessageBox.Show("You don't have permission to create orders.", "Access Denied", 
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
         }
 
@@ -340,87 +450,140 @@ namespace StoreManager
         {
             if (_currentMode == ManageMode.Customer)
             {
-                Customer selectedCustomer = dgCustomer.SelectedItem as Customer;
-                if (selectedCustomer != null)
+                // Check permissions for customer update (Admin and Staff)
+                if (_employee != null && ((_employee.RoleNum ?? 0) == 1 || (_employee.RoleNum ?? 0) == 2 || (_employee.RoleNum ?? 0) == 3))
                 {
-                    ManageCustomerWindow updateWindow = new();
-                    updateWindow.lblEditor.Text = "Update Customer";
-                    updateWindow.customerEdit = selectedCustomer;
-                    updateWindow.ShowDialog();
-                    dgCustomer.ItemsSource = null;
-                    dgCustomer.ItemsSource = _customerService.GetAllCustomers().ToList();
+                    Customer selectedCustomer = dgCustomer.SelectedItem as Customer;
+                    if (selectedCustomer != null)
+                    {
+                        ManageCustomerWindow updateWindow = new();
+                        updateWindow.lblEditor.Text = "Update Customer";
+                        updateWindow.customerEdit = selectedCustomer;
+                        updateWindow.ShowDialog();
+                        dgCustomer.ItemsSource = null;
+                        dgCustomer.ItemsSource = _customerService.GetAllCustomers().ToList();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please select a customer to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Please select a customer to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("You don't have permission to update customers.", "Access Denied", 
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             else if (_currentMode == ManageMode.Employee)
             {
-                Employee selectedEmployee = dgEmployee.SelectedItem as Employee;
-                if (selectedEmployee != null)
+                // Only Admin can update employees
+                if (_employee != null && (_employee.RoleNum ?? 0) == 1)
                 {
-                    ManageEmployeeWindow updateWindow = new();
-                    updateWindow.lblEditor.Text = "Update Employee";
-                    updateWindow.employeeEdit = selectedEmployee;
-                    updateWindow.ShowDialog();
-                    dgEmployee.ItemsSource = null;
-                    dgEmployee.ItemsSource = _employeeService.GetAllEmployees().ToList();
+                    Employee selectedEmployee = dgEmployee.SelectedItem as Employee;
+                    if (selectedEmployee != null)
+                    {
+                        ManageEmployeeWindow updateWindow = new();
+                        updateWindow.lblEditor.Text = "Update Employee";
+                        updateWindow.employeeEdit = selectedEmployee;
+                        updateWindow.ShowDialog();
+                        dgEmployee.ItemsSource = null;
+                        dgEmployee.ItemsSource = _employeeService.GetAllEmployees().ToList();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please select an employee to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Please select an employee to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("You don't have permission to update employees.", "Access Denied", 
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             else if (_currentMode == ManageMode.Product)
             {
-                Product selectedProduct = dgProduct.SelectedItem as Product;
-                if (selectedProduct != null)
+                // Only Admin can update products
+                if (_employee != null && (_employee.RoleNum ?? 0) == 1)
                 {
-                    ManageProductWindow updateWindow = new();
-                    updateWindow.lblEditor.Text = "Update Product";
-                    updateWindow.productEdit = selectedProduct;
-                    updateWindow.ShowDialog();
-                    dgProduct.ItemsSource = null;
-                    dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
+                    Product selectedProduct = dgProduct.SelectedItem as Product;
+                    if (selectedProduct != null)
+                    {
+                        ManageProductWindow updateWindow = new();
+                        updateWindow.lblEditor.Text = "Update Product";
+                        updateWindow.productEdit = selectedProduct;
+                        updateWindow.ShowDialog();
+                        dgProduct.ItemsSource = null;
+                        dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please select a product to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Please select a product to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("You don't have permission to update products.", "Access Denied", 
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             else if (_currentMode == ManageMode.Category)
             {
-                Category selectedCategory = dgCategory.SelectedItem as Category;
-                if (selectedCategory != null)
+                // Only Admin can update categories
+                if (_employee != null && (_employee.RoleNum ?? 0) == 1)
                 {
-                    ManageCategoryWindow updateWindow = new();
-                    updateWindow.lblEditor.Text = "Update Category";
-                    updateWindow.categoryEdit = selectedCategory;
-                    updateWindow.ShowDialog();
-                    dgCategory.ItemsSource = null;
-                    dgCategory.ItemsSource = _categoryService.GetAllCategories().ToList();
+                    Category selectedCategory = dgCategory.SelectedItem as Category;
+                    if (selectedCategory != null)
+                    {
+                        ManageCategoryWindow updateWindow = new();
+                        updateWindow.lblEditor.Text = "Update Category";
+                        updateWindow.categoryEdit = selectedCategory;
+                        updateWindow.ShowDialog();
+                        dgCategory.ItemsSource = null;
+                        dgCategory.ItemsSource = _categoryService.GetAllCategories().ToList();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please select a category to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Please select a category to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("You don't have permission to update categories.", "Access Denied", 
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             else if (_currentMode == ManageMode.Order)
             {
-                Order selectedOrder = dgOrder.SelectedItem as Order;
-                if (selectedOrder != null)
+                // Check permissions for order update (Admin and Staff)
+                if (_employee != null && ((_employee.RoleNum ?? 0) == 1 || (_employee.RoleNum ?? 0) == 2 || (_employee.RoleNum ?? 0) == 3))
                 {
-                    ManageOrderWindow updateWindow = new ManageOrderWindow();
-                    updateWindow.OrderEdit = selectedOrder;
-                    updateWindow.ShowDialog();
+                    Order selectedOrder = dgOrder.SelectedItem as Order;
+                    if (selectedOrder != null)
+                    {
+                        // Staff can only update their own orders
+                        if (((_employee.RoleNum ?? 0) == 2 || (_employee.RoleNum ?? 0) == 3) && selectedOrder.EmployeeId != _employee.EmployeeId)
+                        {
+                            MessageBox.Show("You can only update orders created by yourself.", "Access Denied", 
+                                MessageBoxButton.OK, MessageBoxImage.Warning);
+                            return;
+                        }
+                        
+                        ManageOrderWindow updateWindow = new ManageOrderWindow();
+                        updateWindow.OrderEdit = selectedOrder;
+                        updateWindow.ShowDialog();
 
-                    LoadOrderData();
-                    dgOrderDetail.ItemsSource = null;
+                        LoadOrderData();
+                        dgOrderDetail.ItemsSource = null;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please select an order to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Please select an order to update.", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("You don't have permission to update orders.", "Access Denied", 
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
         }
@@ -455,81 +618,216 @@ namespace StoreManager
             }
             else if (_currentMode == ManageMode.Employee)
             {
-                Employee employee = dgEmployee.SelectedItem as Employee;
-                if (employee != null)
+                // Only Admin can delete employees
+                if (_employee != null && (_employee.RoleNum ?? 0) == 1)
                 {
-                    MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete employee {employee.EmployeeId}?", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                    if (result == MessageBoxResult.Yes)
+                    Employee employee = dgEmployee.SelectedItem as Employee;
+                    if (employee != null)
                     {
-                        bool success = _employeeService.DeleteEmployee(employee.EmployeeId);
-                        if (success)
+                        MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete employee {employee.EmployeeId}?", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                        if (result == MessageBoxResult.Yes)
                         {
-                            MessageBox.Show("Employee deleted successfully.", "Deletion Successful", MessageBoxButton.OK, MessageBoxImage.Information);
-                            dgEmployee.ItemsSource = null;
-                            dgEmployee.ItemsSource = _employeeService.GetAllEmployees().ToList();
+                            bool success = _employeeService.DeleteEmployee(employee.EmployeeId);
+                            if (success)
+                            {
+                                MessageBox.Show("Employee deleted successfully.", "Deletion Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                                dgEmployee.ItemsSource = null;
+                                dgEmployee.ItemsSource = _employeeService.GetAllEmployees().ToList();
+                            }
+                            else
+                            {
+                                MessageBox.Show("Failed to delete employee. Maybe there is still an order for this employee.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
                         }
-                        else
-                        {
-                            MessageBox.Show("Failed to delete employee. Maybe there is still an order for this employee.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please select an employee to delete", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Please select an employee to delete", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("You don't have permission to delete employees.", "Access Denied", 
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             else if (_currentMode == ManageMode.Product)
             {
-                Product product = dgProduct.SelectedItem as Product;
-                if (product != null)
+                // Only Admin can delete products
+                if (_employee != null && (_employee.RoleNum ?? 0) == 1)
                 {
-                    MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete product {product.ProductId}?", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                    if (result == MessageBoxResult.Yes)
+                    Product product = dgProduct.SelectedItem as Product;
+                    if (product != null)
                     {
-                        bool success = _productService.DeleteProduct(product.ProductId);
-                        if (success)
+                        MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete product {product.ProductId}?", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                        if (result == MessageBoxResult.Yes)
                         {
-                            MessageBox.Show("Product deleted successfully.", "Deletion Successful", MessageBoxButton.OK, MessageBoxImage.Information);
-                            dgProduct.ItemsSource = null;
-                            dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
+                            bool success = _productService.DeleteProduct(product.ProductId);
+                            if (success)
+                            {
+                                MessageBox.Show("Product deleted successfully.", "Deletion Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                                dgProduct.ItemsSource = null;
+                                dgProduct.ItemsSource = _productService.GetAllProducts().ToList();
+                            }
+                            else
+                            {
+                                MessageBox.Show("Failed to delete product. Maybe there is still an order for this product.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
                         }
-                        else
-                        {
-                            MessageBox.Show("Failed to delete product. Maybe there is still an order for this product.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please select a product to delete", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Please select a product to delete", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("You don't have permission to delete products.", "Access Denied", 
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             else if (_currentMode == ManageMode.Category)
             {
-                Category category = dgCategory.SelectedItem as Category;
-                if (category != null)
+                // Only Admin can delete categories
+                if (_employee != null && (_employee.RoleNum ?? 0) == 1)
                 {
-                    MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete category {category.CategoryId}?", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                    if (result == MessageBoxResult.Yes)
+                    Category category = dgCategory.SelectedItem as Category;
+                    if (category != null)
                     {
-                        bool success = _categoryService.DeleteCategory(category.CategoryId);
-                        if (success)
+                        MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete category {category.CategoryId}?", "Confirm Deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                        if (result == MessageBoxResult.Yes)
                         {
-                            MessageBox.Show("Category deleted successfully.", "Deletion Successful", MessageBoxButton.OK, MessageBoxImage.Information);
-                            dgCategory.ItemsSource = null;
-                            dgCategory.ItemsSource = _categoryService.GetAllCategories().ToList();
+                            bool success = _categoryService.DeleteCategory(category.CategoryId);
+                            if (success)
+                            {
+                                MessageBox.Show("Category deleted successfully.", "Deletion Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                                dgCategory.ItemsSource = null;
+                                dgCategory.ItemsSource = _categoryService.GetAllCategories().ToList();
+                            }
+                            else
+                            {
+                                MessageBox.Show("Failed to delete category. Maybe there is still a product for this category.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                            }
                         }
-                        else
-                        {
-                            MessageBox.Show("Failed to delete category. Maybe there is still a product for this category.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Please select a category to delete", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Please select a category to delete", "No Selection", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("You don't have permission to delete categories.", "Access Denied", 
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
+            }
+        }
+        #endregion
+
+        #region Role-based UI Configuration
+        private string GetRoleName(int roleNum)
+        {
+            return roleNum switch
+            {
+                1 => "ADMIN",
+                2 or 3 => "STAFF", // Gộp Staff và Junior Staff thành STAFF
+                _ => "UNKNOWN"
+            };
+        }
+
+        private void ConfigureUIForRole()
+        {
+            if (_employee != null)
+            {
+                switch (_employee.RoleNum ?? 0)
+                {
+                    case 1: // Admin - Full access
+                        // No restrictions
+                        break;
+                        
+                    case 2: // Staff - Limited access  
+                    case 3: // Staff (formerly Junior Staff) - Same as regular staff
+                        ConfigureStaffPermissions();
+                        break;
+                        
+                    default:
+                        // Unknown role - minimal access
+                        ConfigureStaffPermissions(); // Give staff permissions as default
+                        break;
+                }
+            }
+        }
+
+        private void ConfigureStaffPermissions()
+        {
+            // Hide restricted sidebar buttons for Staff
+            btn_EmployeeMenu.Visibility = Visibility.Collapsed;
+            btn_Category.Visibility = Visibility.Collapsed;
+            
+            // Set default view to customers for staff
+            btn_CustomerMenu_Click(null, null);
+        }
+
+
+
+        private void LoadOrderDataForStaff()
+        {
+            switch (_employee.RoleNum ?? 0)
+            {
+                case 1: // Admin - see all orders
+                    dgOrder.ItemsSource = _orderService.GetAllOrders().ToList();
+                    break;
+                    
+                case 2: // Staff - only see their own orders
+                case 3: // Staff - only see their own orders  
+                    dgOrder.ItemsSource = _orderService.GetOrdersByEmployee(_employee.EmployeeId).ToList();
+                    break;
+                    
+                default:
+                    // Unknown role - no orders
+                    dgOrder.ItemsSource = new List<Order>();
+                    break;
+            }
+        }
+
+        private void SearchOrdersForStaff()
+        {
+            var searchCustomerName = txtSearchValue.Text;
+            var searchEmployeeName = txtEmployeeNameSearchValue.Text;
+            
+            switch (_employee.RoleNum ?? 0)
+            {
+                case 1: // Admin - search all orders
+                    if (!string.IsNullOrEmpty(searchCustomerName) || !string.IsNullOrEmpty(searchEmployeeName))
+                    {
+                        dgOrder.ItemsSource = _orderService.SearchOrderByEmployeeAndCustomer(searchEmployeeName, searchCustomerName).ToList();
+                    }
+                    else
+                    {
+                        dgOrder.ItemsSource = _orderService.GetAllOrders().ToList();
+                    }
+                    break;
+                    
+                case 2: // Staff - only search in their own orders
+                case 3: // Staff - only search in their own orders
+                    if (!string.IsNullOrEmpty(searchCustomerName))
+                    {
+                        var staffOrders = _orderService.GetOrdersByEmployee(_employee.EmployeeId);
+                        dgOrder.ItemsSource = staffOrders.Where(o => 
+                            o.Customer != null && 
+                            o.Customer.ContactName.ToLower().Contains(searchCustomerName.ToLower())
+                        ).ToList();
+                    }
+                    else
+                    {
+                        LoadOrderDataForStaff();
+                    }
+                    break;
+                    
+                default:
+                    // Unknown role - no search results
+                    dgOrder.ItemsSource = new List<Order>();
+                    break;
             }
         }
         #endregion

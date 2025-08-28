@@ -1,0 +1,292 @@
+<Window x:Class="StoreManager.CreateNewOrderWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StoreManager"
+        mc:Ignorable="d"
+        Title="Create New Order" Height="800" Width="1200" 
+        WindowStartupLocation="CenterScreen"
+        Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <!-- Gradient Brushes -->
+        <LinearGradientBrush x:Key="MainBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#f8f9ff" Offset="0"/>
+            <GradientStop Color="#e6e9ff" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="CardBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#ffffff" Offset="0"/>
+            <GradientStop Color="#f8f9ff" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="PrimaryButtonBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#667eea" Offset="0"/>
+            <GradientStop Color="#764ba2" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="SuccessButtonBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#56ab2f" Offset="0"/>
+            <GradientStop Color="#a8e6cf" Offset="1"/>
+        </LinearGradientBrush>
+
+        <LinearGradientBrush x:Key="DangerButtonBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#e74c3c" Offset="0"/>
+            <GradientStop Color="#c0392b" Offset="1"/>
+        </LinearGradientBrush>
+
+        <!-- Modern Button Style -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="22"
+                                x:Name="border">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.02" ScaleY="1.02"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="Black" Direction="270" ShadowDepth="3" Opacity="0.2" BlurRadius="8"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Card Style -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CardBackgroundBrush}"/>
+            <Setter Property="CornerRadius" Value="20"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="Black" Direction="270" ShadowDepth="5" 
+                                      Opacity="0.1" BlurRadius="20"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Header Style -->
+        <Style x:Key="HeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="Margin" Value="20,10"/>
+        </Style>
+
+        <!-- Modern TextBox Style -->
+        <Style x:Key="ModernTextBoxStyle" TargetType="TextBox">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="15,10"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="#E0E6ED"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="12"
+                                x:Name="border">
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                          VerticalAlignment="Stretch"
+                                          Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#667eea"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern ComboBox Style -->
+        <Style x:Key="ModernComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="15,10"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="#E0E6ED"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#333"/>
+            <Setter Property="Height" Value="45"/>
+        </Style>
+
+        <!-- DataGrid Style -->
+        <Style x:Key="ModernDataGridStyle" TargetType="DataGrid">
+            <Setter Property="Background" Value="{StaticResource CardBackgroundBrush}"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="AlternatingRowBackground" Value="#f8f9ff"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Margin" Value="10"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Background="{StaticResource MainBackgroundBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Style="{StaticResource CardStyle}" Margin="10,10,10,5">
+            <StackPanel Orientation="Horizontal" Margin="20,15">
+                <TextBlock Text="📋 Create New Order" Style="{StaticResource HeaderStyle}" Margin="0"/>
+                <TextBlock Text="Create orders for customers" FontSize="16" FontWeight="SemiBold" 
+                           Foreground="#555" VerticalAlignment="Bottom" Margin="20,0,0,5"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content -->
+        <Grid Grid.Row="1" Margin="10,5,10,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Customer and Product Selection -->
+            <Border Grid.Column="0" Style="{StaticResource CardStyle}">
+                <StackPanel Margin="20">
+                    <!-- Customer Selection -->
+                    <TextBlock Text="Select Customer" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+                    <ComboBox x:Name="cmbCustomers" Style="{StaticResource ModernComboBoxStyle}"
+                              DisplayMemberPath="ContactName" SelectedValuePath="CustomerId"
+                              Margin="0,0,0,20"/>
+
+                    <!-- Product Selection -->
+                    <TextBlock Text="Add Products" FontSize="18" FontWeight="Bold" Margin="0,20,0,10"/>
+                    <ComboBox x:Name="cmbProducts" Style="{StaticResource ModernComboBoxStyle}"
+                              DisplayMemberPath="ProductName" SelectedValuePath="ProductId"
+                              SelectionChanged="cmbProducts_SelectionChanged"
+                              Margin="0,0,0,10"/>
+
+                    <Grid Margin="0,10,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="txtQuantity" Style="{StaticResource ModernTextBoxStyle}"
+                                 Text="1" Grid.Column="0" Margin="0,0,10,0" 
+                                 HorizontalContentAlignment="Center"/>
+                        <Button x:Name="btnAddProduct" Content="➕ Add" 
+                                Style="{StaticResource ModernButtonStyle}"
+                                Background="{StaticResource SuccessButtonBrush}"
+                                Grid.Column="1"
+                                Click="btnAddProduct_Click"/>
+                    </Grid>
+
+                    <!-- Selected Product Info -->
+                    <Border Background="#f8f9ff" CornerRadius="10" Padding="15" Margin="0,0,0,20"
+                            x:Name="pnlProductInfo" Visibility="Collapsed">
+                        <StackPanel>
+                            <TextBlock x:Name="txtProductName" FontWeight="Bold" FontSize="14"/>
+                            <TextBlock x:Name="txtProductPrice" FontSize="12" Foreground="#666"/>
+                            <TextBlock x:Name="txtProductCategory" FontSize="12" Foreground="#666"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!-- Order Items -->
+            <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Order Items" FontSize="18" FontWeight="Bold" Grid.Row="0" Margin="0,0,0,10"/>
+
+                    <DataGrid x:Name="dgOrderItems" Grid.Row="1" Style="{StaticResource ModernDataGridStyle}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Product" Binding="{Binding ProductName}" Width="200"/>
+                            <DataGridTextColumn Header="Price" Binding="{Binding UnitPrice, StringFormat=C}" Width="80"/>
+                            <DataGridTextColumn Header="Qty" Binding="{Binding Quantity}" Width="60"/>
+                            <DataGridTextColumn Header="Subtotal" Binding="{Binding Subtotal, StringFormat=C}" Width="100"/>
+                            <DataGridTemplateColumn Header="Actions" Width="80">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Button Content="❌" 
+                                                Background="{StaticResource DangerButtonBrush}"
+                                                Style="{StaticResource ModernButtonStyle}"
+                                                Width="30" Height="30" Margin="0"
+                                                Tag="{Binding}"
+                                                Click="btnRemoveItem_Click"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!-- Order Summary -->
+                    <Border Grid.Row="2" Background="#f8f9ff" CornerRadius="10" Padding="15" Margin="0,10,0,0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock FontSize="14">
+                                    <Run Text="Total Items: " FontWeight="Bold"/>
+                                    <Run x:Name="txtTotalItems" Text="0"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <TextBlock Grid.Column="1" FontSize="20" FontWeight="Bold">
+                                <Run Text="Total: "/>
+                                <Run x:Name="txtTotalAmount" Text="$0.00"/>
+                            </TextBlock>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!-- Footer Buttons -->
+        <Border Grid.Row="2" Style="{StaticResource CardStyle}" Margin="10,5,10,10">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="20,15">
+                <Button x:Name="btnCreateOrder" Content="✅ Create Order" 
+                        Style="{StaticResource ModernButtonStyle}"
+                        Background="{StaticResource SuccessButtonBrush}"
+                        Width="150" Click="btnCreateOrder_Click"/>
+
+                <Button x:Name="btnCancel" Content="❌ Cancel" 
+                        Style="{StaticResource ModernButtonStyle}"
+                        Background="{StaticResource DangerButtonBrush}"
+                        Width="120" Click="btnCancel_Click"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
