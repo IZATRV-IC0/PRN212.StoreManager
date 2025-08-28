@@ -46,7 +46,7 @@ namespace StoreManager
             _orderDetailsService = new OrderDetailsService();
 
             // Display employee information
-            lblRole.Text = GetRoleName(_employee.RoleNum);
+            lblRole.Text = GetRoleName(_employee.RoleNum ?? 0);
             lbl_NameGreeting.Text = $"Welcome, {_employee.Name}!";
             
             // Configure UI based on role
@@ -66,15 +66,7 @@ namespace StoreManager
             new LoginWindow().Show();
             this.Close();
         }
-        public void disableStaffFeatures()
-        {
-            btn_CustomerMenu.IsEnabled = false;
-            btn_EmployeeMenu.IsEnabled = false;
-            btn_Category.IsEnabled = false;
-            btn_CustomerMenu.Foreground = System.Windows.Media.Brushes.Gray;
-            btn_EmployeeMenu.Foreground = System.Windows.Media.Brushes.Gray;
-            btn_Category.Foreground = System.Windows.Media.Brushes.Gray;
-        }
+
 
         #region Load Data Methods
         private void LoadCustomerData() =>
@@ -142,7 +134,7 @@ namespace StoreManager
             // Configure buttons based on role
             if (_employee != null)
             {
-                switch (_employee.RoleNum)
+                switch (_employee.RoleNum ?? 0)
                 {
                     case 1: // Admin - full access
                         SetButtonVisibility(true, true, true);
@@ -171,7 +163,7 @@ namespace StoreManager
         private void btn_EmployeeMenu_Click(object sender, RoutedEventArgs e)
         {
             // Only Admin can access Employee Management
-            if (_employee != null && _employee.RoleNum != 1)
+            if (_employee != null && (_employee.RoleNum ?? 0) != 1)
             {
                 MessageBox.Show("You don't have permission to access Employee Management.", "Access Denied", 
                     MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -195,7 +187,7 @@ namespace StoreManager
             // Configure buttons based on role
             if (_employee != null)
             {
-                switch (_employee.RoleNum)
+                switch (_employee.RoleNum ?? 0)
                 {
                     case 1: // Admin - full access
                         SetButtonVisibility(true, true, true);
@@ -225,7 +217,7 @@ namespace StoreManager
         private void btn_Category_Click(object sender, RoutedEventArgs e)
         {
             // Only Admin can access Category Management
-            if (_employee != null && _employee.RoleNum != 1)
+            if (_employee != null && (_employee.RoleNum ?? 0) != 1)
             {
                 MessageBox.Show("You don't have permission to access Category Management.", "Access Denied", 
                     MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -248,7 +240,7 @@ namespace StoreManager
             // Configure buttons based on role
             if (_employee != null)
             {
-                switch (_employee.RoleNum)
+                switch (_employee.RoleNum ?? 0)
                 {
                     case 1: // Admin
                         SetButtonVisibility(false, false, true); // Default admin behavior
@@ -379,7 +371,7 @@ namespace StoreManager
             if (_currentMode == ManageMode.Customer)
             {
                 // Check permissions for customer creation
-                if (_employee != null && (_employee.RoleNum == 1 || _employee.RoleNum == 2 || _employee.RoleNum == 3))
+                if (_employee != null && ((_employee.RoleNum ?? 0) == 1 || (_employee.RoleNum ?? 0) == 2 || (_employee.RoleNum ?? 0) == 3))
                 {
                     ManageCustomerWindow manageCustomerWindow = new();
                     manageCustomerWindow.lblEditor.Text = "Create New Customer";
@@ -396,7 +388,7 @@ namespace StoreManager
             else if (_currentMode == ManageMode.Employee)
             {
                 // Only Admin can create employees
-                if (_employee != null && _employee.RoleNum == 1)
+                if (_employee != null && (_employee.RoleNum ?? 0) == 1)
                 {
                     ManageEmployeeWindow manageEmployeeWindow = new();
                     manageEmployeeWindow.lblEditor.Text = "Create New Employee";
@@ -413,7 +405,7 @@ namespace StoreManager
             else if (_currentMode == ManageMode.Product)
             {
                 // Only Admin can create products
-                if (_employee != null && _employee.RoleNum == 1)
+                if (_employee != null && (_employee.RoleNum ?? 0) == 1)
                 {
                     ManageProductWindow manageProductWindow = new();
                     manageProductWindow.lblEditor.Text = "Create New Product";
@@ -430,7 +422,7 @@ namespace StoreManager
             else if (_currentMode == ManageMode.Category)
             {
                 // Only Admin can create categories
-                if (_employee != null && _employee.RoleNum == 1)
+                if (_employee != null && (_employee.RoleNum ?? 0) == 1)
                 {
                     ManageCategoryWindow manageCategoryWindow = new();
                     manageCategoryWindow.lblEditor.Text = "Create New Category";
@@ -447,7 +439,7 @@ namespace StoreManager
             else if (_currentMode == ManageMode.Order)
             {
                 // Only Staff (RoleNum = 2) can create new orders
-                if (_employee != null && _employee.RoleNum == 2)
+                if (_employee != null && (_employee.RoleNum ?? 0) == 2)
                 {
                     CreateNewOrderWindow createOrderWindow = new CreateNewOrderWindow(_employee);
                     createOrderWindow.ShowDialog();
@@ -467,7 +459,7 @@ namespace StoreManager
             if (_currentMode == ManageMode.Customer)
             {
                 // Check permissions for customer update
-                if (_employee != null && (_employee.RoleNum == 1 || _employee.RoleNum == 2))
+                if (_employee != null && ((_employee.RoleNum ?? 0) == 1 || (_employee.RoleNum ?? 0) == 2))
                 {
                     Customer selectedCustomer = dgCustomer.SelectedItem as Customer;
                     if (selectedCustomer != null)
@@ -493,7 +485,7 @@ namespace StoreManager
             else if (_currentMode == ManageMode.Employee)
             {
                 // Only Admin can update employees
-                if (_employee != null && _employee.RoleNum == 1)
+                if (_employee != null && (_employee.RoleNum ?? 0) == 1)
                 {
                     Employee selectedEmployee = dgEmployee.SelectedItem as Employee;
                     if (selectedEmployee != null)
@@ -519,7 +511,7 @@ namespace StoreManager
             else if (_currentMode == ManageMode.Product)
             {
                 // Only Admin can update products
-                if (_employee != null && _employee.RoleNum == 1)
+                if (_employee != null && (_employee.RoleNum ?? 0) == 1)
                 {
                     Product selectedProduct = dgProduct.SelectedItem as Product;
                     if (selectedProduct != null)
@@ -545,7 +537,7 @@ namespace StoreManager
             else if (_currentMode == ManageMode.Category)
             {
                 // Only Admin can update categories
-                if (_employee != null && _employee.RoleNum == 1)
+                if (_employee != null && (_employee.RoleNum ?? 0) == 1)
                 {
                     Category selectedCategory = dgCategory.SelectedItem as Category;
                     if (selectedCategory != null)
@@ -571,13 +563,13 @@ namespace StoreManager
             else if (_currentMode == ManageMode.Order)
             {
                 // Check permissions for order update
-                if (_employee != null && (_employee.RoleNum == 1 || _employee.RoleNum == 2))
+                if (_employee != null && ((_employee.RoleNum ?? 0) == 1 || (_employee.RoleNum ?? 0) == 2))
                 {
                     Order selectedOrder = dgOrder.SelectedItem as Order;
                     if (selectedOrder != null)
                     {
                         // Staff can only update their own orders
-                        if (_employee.RoleNum == 2 && selectedOrder.EmployeeId != _employee.EmployeeId)
+                        if ((_employee.RoleNum ?? 0) == 2 && selectedOrder.EmployeeId != _employee.EmployeeId)
                         {
                             MessageBox.Show("You can only update orders created by yourself.", "Access Denied", 
                                 MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -635,7 +627,7 @@ namespace StoreManager
             else if (_currentMode == ManageMode.Employee)
             {
                 // Only Admin can delete employees
-                if (_employee != null && _employee.RoleNum == 1)
+                if (_employee != null && (_employee.RoleNum ?? 0) == 1)
                 {
                     Employee employee = dgEmployee.SelectedItem as Employee;
                     if (employee != null)
@@ -670,7 +662,7 @@ namespace StoreManager
             else if (_currentMode == ManageMode.Product)
             {
                 // Only Admin can delete products
-                if (_employee != null && _employee.RoleNum == 1)
+                if (_employee != null && (_employee.RoleNum ?? 0) == 1)
                 {
                     Product product = dgProduct.SelectedItem as Product;
                     if (product != null)
@@ -705,7 +697,7 @@ namespace StoreManager
             else if (_currentMode == ManageMode.Category)
             {
                 // Only Admin can delete categories
-                if (_employee != null && _employee.RoleNum == 1)
+                if (_employee != null && (_employee.RoleNum ?? 0) == 1)
                 {
                     Category category = dgCategory.SelectedItem as Category;
                     if (category != null)
@@ -756,7 +748,7 @@ namespace StoreManager
         {
             if (_employee != null)
             {
-                switch (_employee.RoleNum)
+                switch (_employee.RoleNum ?? 0)
                 {
                     case 1: // Admin - Full access
                         // No restrictions
@@ -801,7 +793,7 @@ namespace StoreManager
 
         private void LoadOrderDataForStaff()
         {
-            switch (_employee.RoleNum)
+            switch (_employee.RoleNum ?? 0)
             {
                 case 1: // Admin - see all orders
                     dgOrder.ItemsSource = _orderService.GetAllOrders().ToList();
@@ -824,7 +816,7 @@ namespace StoreManager
             var searchCustomerName = txtSearchValue.Text;
             var searchEmployeeName = txtEmployeeNameSearchValue.Text;
             
-            switch (_employee.RoleNum)
+            switch (_employee.RoleNum ?? 0)
             {
                 case 1: // Admin - search all orders
                     if (!string.IsNullOrEmpty(searchCustomerName) || !string.IsNullOrEmpty(searchEmployeeName))
